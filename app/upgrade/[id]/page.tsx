@@ -1,0 +1,470 @@
+"use client"
+
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { useRouter, useParams } from "next/navigation"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { ArrowLeft, Users, HardDrive, Coins, TrendingUp, Star } from "lucide-react"
+import upgradesData from "@/data/upgrades.json"
+
+const { upgrades: mockUpgrades, metadata } = upgradesData
+const { statusColors, fallbacks } = metadata
+
+const categoryColors = {
+  Storage: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+  Retrieval: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+  Security: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+  Performance: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+  Economic: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
+}
+
+const minerCountData = [
+  { date: "2024-01", miners: 2800, active: 2650 },
+  { date: "2024-02", miners: 2950, active: 2780 },
+  { date: "2024-03", miners: 3100, active: 2920 },
+  { date: "2024-04", miners: 3250, active: 3050 },
+  { date: "2024-05", miners: 3400, active: 3180 },
+  { date: "2024-06", miners: 3580, active: 3350 },
+  { date: "2024-07", miners: 3720, active: 3480 },
+  { date: "2024-08", miners: 3850, active: 3600 },
+  { date: "2024-09", miners: 3980, active: 3720 },
+  { date: "2024-10", miners: 4120, active: 3850 },
+  { date: "2024-11", miners: 4250, active: 3970 },
+  { date: "2024-12", miners: 4380, active: 4100 },
+]
+
+const isFip0077 = (fip: any) => {
+  const id = (fip?.id || "").toString().toUpperCase().replace(/\s+/g, "")
+  return id === "FIP-0077" || id === "FIP0077" || fip?.number === 77
+}
+
+function FIPImpactModal({ fip, isOpen, onClose }: { fip: any; isOpen: boolean; onClose: () => void }) {
+  if (!fip) return null
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Badge className={categoryColors.Storage}>{fip.category || "General"}</Badge>
+            {fip.id}: {fip.title}
+          </DialogTitle>
+          <p className="text-muted-foreground">{fip.description}</p>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Filecoin Miner Count Trends
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Historical and projected changes in Filecoin network miner participation
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={minerCountData}>
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <XAxis dataKey="date" tick={{ fontSize: 12 }} tickLine={{ stroke: "#666" }} />
+                    <YAxis
+                      tick={{ fontSize: 12 }}
+                      tickLine={{ stroke: "#666" }}
+                      domain={["dataMin - 100", "dataMax + 100"]}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "hsl(var(--background))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: "6px",
+                        fontSize: "12px",
+                      }}
+                      labelFormatter={(label) => `Month: ${label}`}
+                      formatter={(value, name) => [
+                        value.toLocaleString(),
+                        name === "miners" ? "Total Miners" : "Active Miners",
+                      ]}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="miners"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={2}
+                      dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: "hsl(var(--primary))", strokeWidth: 2 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="active"
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeWidth={2}
+                      strokeDasharray="5 5"
+                      dot={{ fill: "hsl(var(--muted-foreground))", strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: "hsl(var(--muted-foreground))", strokeWidth: 2 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="flex items-center justify-center gap-6 mt-4 text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-0.5 bg-primary"></div>
+                  <span>Total Miners</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-0.5 bg-muted-foreground"
+                    style={{
+                      backgroundImage:
+                        "repeating-linear-gradient(to right, currentColor 0, currentColor 3px, transparent 3px, transparent 8px)",
+                    }}
+                  ></div>
+                  <span>Active Miners</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">4,380</div>
+                  <div className="text-sm text-muted-foreground">Current Total Miners</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">+56%</div>
+                  <div className="text-sm text-muted-foreground">Growth This Year</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export default function UpgradeDetails() {
+  const router = useRouter()
+  const params = useParams()
+  const upgradeId = Number.parseInt(params.id as string)
+  const [selectedFIP, setSelectedFIP] = useState<any | null>(null)
+  const [activeFIPId, setActiveFIPId] = useState<string | null>(null)
+
+  const upgrade = mockUpgrades.find((u) => u.id === upgradeId)
+
+  if (!upgrade) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Upgrade Not Found</h1>
+          <Button onClick={() => router.push("/")}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Upgrades
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  const safeUpgrade = {
+    ...upgrade,
+    status: upgrade.status || fallbacks.defaultStatus,
+    notes: upgrade.notes || fallbacks.defaultNotes,
+    releaseTag: upgrade.releaseTag || fallbacks.defaultReleaseTag,
+    specs: upgrade.specs || fallbacks.emptySpecs,
+    fips: upgrade.fips || [],
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+            <Button variant="link" className="p-0 h-auto text-sm" onClick={() => router.push("/")}>
+              All Network Upgrades
+            </Button>
+            <span>/</span>
+            <span>{safeUpgrade.name}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-balance mb-2">{safeUpgrade.name}</h1>
+              <p className="text-muted-foreground">{safeUpgrade.notes}</p>
+            </div>
+            <Badge className={statusColors[safeUpgrade.status as keyof typeof statusColors] || statusColors.Upcoming}>
+              {safeUpgrade.status}
+            </Badge>
+          </div>
+        </div>
+      </header>
+
+      <div className="border-b bg-muted/20">
+        <div className="container mx-auto px-4 py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div>
+              <div className="text-2xl font-bold text-muted-foreground">0</div>
+              <div className="text-sm text-muted-foreground">Activated</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-muted-foreground">0</div>
+              <div className="text-sm text-muted-foreground">Scheduled</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{safeUpgrade.fips.length}</div>
+              <div className="text-sm text-muted-foreground">FIPs</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-muted-foreground">0</div>
+              <div className="text-sm text-muted-foreground">Declined or Postponed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <main className="container mx-auto px-4 py-8">
+        <div className="flex gap-8">
+          <div className="w-64 flex-shrink-0">
+            <div className="sticky top-8">
+              <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground mb-4">Contents</h3>
+              <nav className="space-y-1">
+                <a href="#overview" className="block text-sm hover:text-primary transition-colors py-1">
+                  Overview
+                </a>
+                <a href="#fips" className="block text-sm text-primary font-medium py-1">
+                  FIPs
+                </a>
+                {safeUpgrade.fips.map((fip: any) => (
+                  <a
+                    key={fip.id}
+                    href={`#${fip.id}`}
+                    className={`block text-sm transition-colors pl-4 py-1 font-mono ${
+                      activeFIPId === fip.id
+                        ? "text-primary font-medium bg-primary/10 rounded-md px-2"
+                        : "text-muted-foreground hover:text-primary"
+                    }`}
+                    onClick={() => setActiveFIPId(fip.id)}
+                  >
+                    <span className="inline-flex items-center gap-1">
+                      {isFip0077(fip) && <Star className="h-3.5 w-3.5 text-amber-500" aria-label="Important FIP" />}
+                      {fip.id}
+                    </span>
+                  </a>
+                ))}
+              </nav>
+            </div>
+          </div>
+
+          <div className="flex-1 max-w-4xl">
+            <section id="overview" className="mb-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="bg-muted/30 rounded-lg p-4">
+                  <div className="text-sm text-muted-foreground mb-1">Network Version</div>
+                  <div className="text-lg font-mono">{safeUpgrade.networkVersion}</div>
+                </div>
+                <div className="bg-muted/30 rounded-lg p-4">
+                  <div className="text-sm text-muted-foreground mb-1">Target Date</div>
+                  <div className="text-lg">
+                    {safeUpgrade.timeTarget
+                      ? new Date(safeUpgrade.timeTarget).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "TBD"}
+                  </div>
+                </div>
+                <div className="bg-muted/30 rounded-lg p-4">
+                  <div className="text-sm text-muted-foreground mb-1">Release Tag</div>
+                  <div className="text-lg font-mono">{safeUpgrade.releaseTag}</div>
+                </div>
+              </div>
+            </section>
+
+            <section id="fips" className="mb-12">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">FIPs</h2>
+                <span className="text-sm text-muted-foreground">({safeUpgrade.fips.length})</span>
+              </div>
+
+              <p className="text-muted-foreground mb-8">The following FIPs are part of this upgrade.</p>
+
+              <div className="space-y-6">
+                {safeUpgrade.fips.length > 0 ? (
+                  safeUpgrade.fips.map((fip: any, index: number) => (
+                    <motion.div
+                      key={fip.id}
+                      id={fip.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      className={`border rounded-lg p-6 hover:shadow-sm transition-all ${
+                        activeFIPId === fip.id ? "border-primary shadow-sm bg-primary/5" : ""
+                      }`}
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-3">
+                            <Badge variant="outline" className="font-mono">
+                              {fip.id}
+                            </Badge>
+                            {isFip0077(fip) && <Star className="h-4 w-4 text-amber-500" aria-label="Important FIP" />}
+                            {fip.category && (
+                              <Badge
+                                className={
+                                  categoryColors[fip.category as keyof typeof categoryColors] || categoryColors.Storage
+                                }
+                              >
+                                {fip.category}
+                              </Badge>
+                            )}
+                          </div>
+                          <h3 className="text-xl font-semibold mb-2">{fip.title}</h3>
+                          {fip.description && <p className="text-sm text-muted-foreground mb-4">{fip.description}</p>}
+                        </div>
+                      </div>
+
+                      {fip.impact && (
+                        <div className="border-t pt-6">
+                          <div className="space-y-6">
+                            {fip.impact.endUsers && (
+                              <div>
+                                <h5 className="font-medium text-blue-700 dark:text-blue-400 mb-3 flex items-center gap-2">
+                                  <Users className="h-4 w-4" />
+                                  End Users
+                                </h5>
+                                <ul className="ml-6 space-y-1">
+                                  {[
+                                    ...(fip.impact.endUsers.positive || []),
+                                    ...(fip.impact.endUsers.challenges || []),
+                                    ...(fip.impact.endUsers.neutral || []),
+                                  ].map((impact: string, idx: number) => (
+                                    <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                      <span className="mt-1 text-xs">•</span>
+                                      {impact}
+                                    </li>
+                                  ))}
+                                  {!fip.impact.endUsers.positive?.length &&
+                                    !fip.impact.endUsers.challenges?.length &&
+                                    !fip.impact.endUsers.neutral?.length && (
+                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                    )}
+                                </ul>
+                              </div>
+                            )}
+
+                            {fip.impact.applicationDevelopers && (
+                              <div>
+                                <h5 className="font-medium text-orange-700 dark:text-orange-400 mb-3 flex items-center gap-2">
+                                  <Coins className="h-4 w-4" />
+                                  Application Developers
+                                </h5>
+                                <ul className="ml-6 space-y-1">
+                                  {[
+                                    ...(fip.impact.applicationDevelopers.positive || []),
+                                    ...(fip.impact.applicationDevelopers.challenges || []),
+                                    ...(fip.impact.applicationDevelopers.neutral || []),
+                                  ].map((impact: string, idx: number) => (
+                                    <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                      <span className="mt-1 text-xs">•</span>
+                                      {impact}
+                                    </li>
+                                  ))}
+                                  {!fip.impact.applicationDevelopers.positive?.length &&
+                                    !fip.impact.applicationDevelopers.challenges?.length &&
+                                    !fip.impact.applicationDevelopers.neutral?.length && (
+                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                    )}
+                                </ul>
+                              </div>
+                            )}
+
+                            {fip.impact.storageProviders && (
+                              <div>
+                                <h5 className="font-medium text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-2">
+                                  <HardDrive className="h-4 w-4" />
+                                  Storage Providers
+                                </h5>
+                                <ul className="ml-6 space-y-1">
+                                  {[
+                                    ...(fip.impact.storageProviders.positive || []),
+                                    ...(fip.impact.storageProviders.challenges || []),
+                                    ...(fip.impact.storageProviders.neutral || []),
+                                  ].map((impact: string, idx: number) => (
+                                    <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                      <span className="mt-1 text-xs">•</span>
+                                      {impact}
+                                    </li>
+                                  ))}
+                                  {!fip.impact.storageProviders.positive?.length &&
+                                    !fip.impact.storageProviders.challenges?.length &&
+                                    !fip.impact.storageProviders.neutral?.length && (
+                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                    )}
+                                </ul>
+                              </div>
+                            )}
+
+                            {fip.impact.toolingInfrastructureDevelopers && (
+                              <div>
+                                <h5 className="font-medium text-muted-foreground mb-3 flex items-center gap-2">
+                                  <TrendingUp className="h-4 w-4" />
+                                  Tooling / Infrastructure Developers
+                                </h5>
+                                <ul className="ml-6 space-y-1">
+                                  {[
+                                    ...(fip.impact.toolingInfrastructureDevelopers.positive || []),
+                                    ...(fip.impact.toolingInfrastructureDevelopers.challenges || []),
+                                    ...(fip.impact.toolingInfrastructureDevelopers.neutral || []),
+                                  ].map((impact: string, idx: number) => (
+                                    <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                      <span className="mt-1 text-xs">•</span>
+                                      {impact}
+                                    </li>
+                                  ))}
+                                  {!fip.impact.toolingInfrastructureDevelopers.positive?.length &&
+                                    !fip.impact.toolingInfrastructureDevelopers.challenges?.length &&
+                                    !fip.impact.toolingInfrastructureDevelopers.neutral?.length && (
+                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                    )}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex justify-end mt-6">
+                            {fip.showDetailedImpact && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedFIP(fip)
+                                  setActiveFIPId(fip.id)
+                                }}
+                              >
+                                View Detailed Impact
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <p>No FIP specifications available for this upgrade.</p>
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      {selectedFIP && <FIPImpactModal fip={selectedFIP} isOpen={!!selectedFIP} onClose={() => setSelectedFIP(null)} />}
+    </div>
+  )
+}

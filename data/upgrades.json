@@ -1,0 +1,422 @@
+{
+  "upgrades": [
+    {
+      "id": 1,
+      "name": "Mercury",
+      "networkVersion": "nv27",
+      "chain": "Mainnet",
+      "epochTarget": 5348280,
+      "timeTarget": "2025-09-24T23:00:00Z",
+      "status": "Upcoming",
+      "releaseTag": "lotus v1.34.0",
+      "specs": ["FIP-0077", "FRC-0102", "FIP-0103", "FIP-0106", "FIP-0101", "FRC-0108", "FIP-0109"],
+      "links": {
+        "releaseNotes": "https://github.com/filecoin-project/lotus/releases/tag/v1.34.0",
+        "blog": "https://filecoin.io/blog/dragon-upgrade",
+        "discussion": "https://github.com/filecoin-project/FIPs/discussions/881"
+      },
+      "notes": "Protocol cleanup and enhancement introducing FEVM cryptographic precompiles, F3 snapshot support, smart contract notifications, and a 5 FIL miner creation deposit while removing deprecated methods.",
+      "fips": [
+        {
+          "id": "FIP-0077",
+          "title": "Add Cost Opportunity For New Miner Creation",
+          "description": "A deposit requirement for creating new miner actors to prevent unnecessary miner ID creation and potential network spam attacks",
+          "showDetailedImpact": true,
+          "impact": {
+            "endUsers": {
+              "positive": [
+                "No direct impact: End users (those who store or retrieve data) are not involved in miner creation, so this FIP does not directly affect them.",
+                "Indirect network benefit: By reducing unnecessary miner IDs and potential network spam, the overall network efficiency may improve, indirectly benefitting end users.",
+                "No need for user action: End users do not need to adapt or change their behavior due to this FIP."
+              ],
+              "challenges": [],
+              "neutral": []
+            },
+            "applicationDevelopers": {
+              "positive": [
+                "Minimal direct impact as most apps do not handle miner creation.",
+                "Improved network stability may benefit applications.",
+                "API compatibility: Apps that automate miner creation can now rely on reduced spam and more predictable network behavior."
+              ],
+              "challenges": [
+                "If the application handles miner creation, it needs to update error handling and support the deposit parameter."
+              ],
+              "neutral": [
+                "No significant changes for apps not interacting with miner creation."
+              ]
+            },
+            "storageProviders": {
+              "positive": [
+                "Discourages wasteful creation of unused miner actors, making the network more efficient.",
+                "Deposit is refundable (vested over 180 days), so legitimate storage providers are not permanently penalized.",
+                "Reduces incentive for spam or mass miner creation, leading to fairer network conditions."
+              ],
+              "challenges": [
+                "Increased entry and operational cost when creating new miner actors.",
+                "Existing operational scripts and onboarding procedures may need updates to handle the deposit requirement."
+              ],
+              "neutral": [
+                "No impact on existing miner actors or current storage operations."
+              ]
+            },
+            "toolingInfrastructureDevelopers": {
+              "positive": [
+                "Clearer process for handling miner creation, as deposit logic is now standardized.",
+                "Fewer spam miner actors to track, simplifying monitoring and analytics."
+              ],
+              "challenges": [
+                "SDKs, CLI tools, and automation scripts must be updated to support the new deposit mechanism and related error handling.",
+                "Automated tests and documentation will require updates."
+              ],
+              "neutral": [
+                "Tools unrelated to miner creation remain unaffected."
+              ]
+            }
+          }
+        },
+        {
+          "id": "FRC-0102",
+          "title": "Wallet-Signing Envelope for Arbitrary Messages",
+          "description": "Enhanced storage deal negotiation and verification processes",
+          "showDetailedImpact": true,
+          "impact": {
+            "endUsers": {
+              "positive": [
+                "Faster deal confirmation",
+                "Lower storage costs",
+                "Improved data availability"
+              ],
+              "challenges": [
+                "Initial learning curve for new interfaces"
+              ],
+              "neutral": [
+                "No changes to existing stored data"
+              ]
+            },
+            "storageProviders": {
+              "positive": [
+                "Reduced operational overhead",
+                "Better deal matching",
+                "Improved revenue streams"
+              ],
+              "challenges": [
+                "Need to update client software",
+                "Temporary increased bandwidth usage during transition"
+              ],
+              "neutral": [
+                "Existing deals remain unaffected"
+              ]
+            },
+            "applicationDevelopers": {
+              "positive": [
+                "New APIs for deal management",
+                "Better error handling",
+                "Enhanced monitoring tools"
+              ],
+              "challenges": [
+                "API breaking changes require code updates"
+              ],
+              "neutral": [
+                "Backward compatibility for 6 months"
+              ]
+            },
+            "toolingInfrastructureDevelopers": {
+              "positive": [
+                "Improved signing workflows in SDKs and wallets",
+                "Clear validation primitives for tooling"
+              ],
+              "challenges": [
+                "Signing libraries and CLIs need updates"
+              ],
+              "neutral": [
+                "Legacy paths available during a deprecation window"
+              ]
+            }
+          }
+        },
+        {
+          "id": "FIP-0103",
+          "title": "Remove ExtendSectorExpiration method",
+          "description": "Clean up builtin actors and reduce technical debt",
+          "showDetailedImpact": false,
+          "impact": {
+            "endUsers": [],
+            "applicationDevelopers": [],
+            "storageProviders": [],
+            "toolingInfrastructureDevelopers": []
+          }
+        },
+        {
+          "id": "FIP-0106",
+          "title": "Remove ProveReplicaUpdates method",
+          "description": "Clean up builtin actors and reduce technical debt",
+          "showDetailedImpact": false,
+          "impact": {
+            "endUsers": [],
+            "applicationDevelopers": [],
+            "storageProviders": [],
+            "toolingInfrastructureDevelopers": []
+          }
+        },
+        {
+          "id": "FIP-0101",
+          "title": "Remove ProveCommitAggregate method",
+          "description": "Builtin actor cleanup and reduction of technical debt",
+          "showDetailedImpact": false,
+          "impact": {
+            "endUsers": [],
+            "applicationDevelopers": [],
+            "storageProviders": [],
+            "toolingInfrastructureDevelopers": []
+          }
+        },
+        {
+          "id": "FRC-0108",
+          "title": "Filecoin Snapshot Format",
+          "description": "Introduce a v2 Filecoin snapshot format to include F3 snapshot data for faster node bootstrapping and reduced network bandwidth usage.",
+          "showDetailedImpact": false,
+          "impact": {
+            "endUsers": [],
+            "applicationDevelopers": [],
+            "storageProviders": [],
+            "toolingInfrastructureDevelopers": []
+          }
+        },
+        {
+          "id": "FIP-0109",
+          "title": "Enable smart contract notifications for Direct Data Onboarding (DDO)",
+          "description": "Improved data retrieval mechanisms and caching strategies",
+          "showDetailedImpact": true,
+          "impact": {
+            "endUsers": [],
+            "applicationDevelopers": [],
+            "storageProviders": [],
+            "toolingInfrastructureDevelopers": []
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Teep",
+      "networkVersion": "nv25",
+      "chain": "Mainnet",
+      "epochTarget": 4878840,
+      "timeTarget": "2025-04-14T23:00:00Z",
+      "status": "Finalized",
+      "releaseTag": "lotus v1.32.2",
+      "specs": ["FIP-0097", "FIP-0098", "FIP-0100", "FIP-0086"],
+      "links": {
+        "releaseNotes": "https://github.com/filecoin-project/lotus/releases/tag/v1.32.2",
+        "blog": "https://filecoin.io/blog/skyrise-upgrade",
+        "discussion": "https://github.com/filecoin-project/FIPs/discussions/878"
+      },
+      "notes": "Enhanced consensus mechanisms and improved network stability.",
+      "fips": [
+        {
+          "id": "FIP-0097",
+          "title": "Consensus Mechanism Enhancement",
+          "description": "Improved consensus algorithm for better network stability",
+          "showDetailedImpact": true,
+          "impact": {
+            "endUsers": {
+              "positive": [
+                "More reliable network",
+                "Faster transaction finality"
+              ],
+              "challenges": [],
+              "neutral": [
+                "No user action required"
+              ]
+            },
+            "storageProviders": {
+              "positive": [
+                "Reduced fork probability",
+                "Better reward predictability"
+              ],
+              "challenges": [
+                "Slight increase in computational requirements"
+              ],
+              "neutral": [
+                "No changes to storage operations"
+              ]
+            },
+            "applicationDevelopers": {
+              "positive": [
+                "More predictable block times",
+                "Better network monitoring"
+              ],
+              "challenges": [],
+              "neutral": [
+                "No API changes"
+              ]
+            },
+            "toolingInfrastructureDevelopers": {
+              "positive": [
+                "Cleaner metrics for consensus health",
+                "Improved node observability hooks"
+              ],
+              "challenges": [
+                "Monitoring stacks need minor updates"
+              ],
+              "neutral": [
+                "Backwards compatibility remains"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Tuk Tuk",
+      "networkVersion": "nv24",
+      "chain": "Mainnet",
+      "epochTarget": 4461240,
+      "timeTarget": "2024-11-20T23:00:00Z",
+      "status": "Finalized",
+      "releaseTag": "lotus v1.30.0",
+      "specs": ["FIP-0081", "FIP-0094", "FIP-0095"],
+      "links": {
+        "releaseNotes": "https://github.com/filecoin-project/lotus/releases/tag/v1.30.0",
+        "blog": "https://filecoin.io/blog/phoenix-upgrade",
+        "discussion": "https://github.com/filecoin-project/FIPs/discussions/884"
+      },
+      "notes": "Major protocol improvements with enhanced security features. Currently being tested on Calibration network.",
+      "fips": [
+        {
+          "id": "FIP-0081",
+          "title": "Enhanced Security Framework",
+          "description": "Advanced cryptographic improvements and security enhancements",
+          "showDetailedImpact": true,
+          "impact": {
+            "endUsers": {
+              "positive": [
+                "Better data protection",
+                "Enhanced privacy features"
+              ],
+              "challenges": [
+                "May require wallet updates"
+              ],
+              "neutral": [
+                "Existing data remains secure"
+              ]
+            },
+            "storageProviders": {
+              "positive": [
+                "Improved sector security",
+                "Better fraud detection"
+              ],
+              "challenges": [
+                "Need to update security protocols",
+                "Additional verification steps"
+              ],
+              "neutral": [
+                "No impact on existing sectors"
+              ]
+            },
+            "applicationDevelopers": {
+              "positive": [
+                "New security APIs",
+                "Better audit tools"
+              ],
+              "challenges": [
+                "Security model changes require code review"
+              ],
+              "neutral": [
+                "Gradual rollout planned"
+              ]
+            },
+            "toolingInfrastructureDevelopers": {
+              "positive": [
+                "Updated cryptographic libraries",
+                "CLI support for new verification flows"
+              ],
+              "challenges": [
+                "Toolchains must adopt new primitives"
+              ],
+              "neutral": [
+                "Legacy verification kept during transition"
+              ]
+            }
+          }
+        },
+        {
+          "id": "FIP-0085",
+          "title": "Protocol Optimization",
+          "description": "Core protocol improvements for better performance",
+          "showDetailedImpact": true,
+          "impact": {
+            "endUsers": {
+              "positive": [
+                "Faster network operations",
+                "Lower transaction fees"
+              ],
+              "challenges": [],
+              "neutral": [
+                "Transparent to end users"
+              ]
+            },
+            "storageProviders": {
+              "positive": [
+                "Reduced operational costs",
+                "Better network efficiency"
+              ],
+              "challenges": [
+                "Temporary increased resource usage during upgrade"
+              ],
+              "neutral": [
+                "Long-term benefits outweigh short-term costs"
+              ]
+            },
+            "applicationDevelopers": {
+              "positive": [
+                "Improved SDK performance",
+                "Better debugging tools"
+              ],
+              "challenges": [
+                "Some internal APIs may change"
+              ],
+              "neutral": [
+                "Migration guides provided"
+              ]
+            },
+            "toolingInfrastructureDevelopers": {
+              "positive": [
+                "New profiling hooks",
+                "CI can validate performance regressions"
+              ],
+              "challenges": [
+                "Benchmark suites must be updated"
+              ],
+              "neutral": [
+                "Old benchmarks can co-exist temporarily"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2024-12-15T10:00:00Z",
+    "version": "1.0.0",
+    "statusColors": {
+      "Upcoming": "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+      "In Progress": "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+      "Finalized": "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+      "Postponed": "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+    },
+    "chainColors": {
+      "Mainnet": "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+    },
+    "fallbacks": {
+      "defaultStatus": "Unknown",
+      "defaultChain": "Mainnet",
+      "defaultNotes": "No additional information available.",
+      "defaultReleaseTag": "TBD",
+      "emptySpecs": [],
+      "emptyLinks": {}
+    }
+  }
+}
