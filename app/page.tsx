@@ -9,6 +9,7 @@ import { getAllUpgrades } from "@/data/loaders/upgrades"
 import upgradesData from "@/data/upgrades.json"
 import { motion } from "framer-motion"
 import { Calendar, ChevronRight, Clock, GitBranch } from "lucide-react"
+import Image from 'next/image'
 import { useRouter } from "next/navigation"
 import type React from "react"
 import { useEffect, useState } from "react"
@@ -293,13 +294,42 @@ export default function FilecoinUpgrades() {
 
       {/* Footer */}
       <footer className="border-t bg-card mt-16">
-        <div className="container mx-auto px-4 py-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            An experiment by the Filecoin community. Have feedback? Join us on{" "}
-            <a href="https://filecoinproject.slack.com/archives/CEHHJNJS3" className="text-primary hover:underline">
+        <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between">
+          <p className="text-sm text-muted-foreground mb-2 md:mb-0">
+            Powered by Venus
+          </p>
+          <div className="flex items-center gap-4">
+            <a
+              href="https://filecoinproject.slack.com/archives/CEHHJNJS3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-sm text-muted-foreground hover:text-primary hover:underline"
+            >
+              <Image
+                src="/icons/slack.png"
+                alt="Slack"
+                width={16}
+                height={16}
+                className="mr-2"
+              />
               Slack
             </a>
-          </p>
+            <a
+              href="https://github.com/filecoin-project/venus"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-sm text-muted-foreground hover:text-primary hover:underline"
+            >
+              <Image
+                src="/icons/github.png"
+                alt="GitHub"
+                width={16}
+                height={16}
+                className="mr-2"
+              />
+              GitHub
+            </a>
+          </div>
         </div>
       </footer>
     </div>
