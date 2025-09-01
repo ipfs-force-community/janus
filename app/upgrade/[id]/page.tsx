@@ -68,6 +68,7 @@ function FIPImpactModal({ fip, isOpen, onClose }: { fip: any; isOpen: boolean; o
               <p className="text-sm text-muted-foreground">
                 Historical and projected changes in Filecoin network miner participation
               </p>
+              <p className="text-xs text-red-500 font-medium mt-1">Mock Data - Real Data Coming Soon</p>
             </CardHeader>
             <CardContent>
               <div className="h-80 w-full">
