@@ -1,0 +1,12 @@
+{
+  "id": "FIP-0103",
+  "title": "Remove ExtendSectorExpiration method",
+  "description": "Clean up builtin actors and reduce technical debt",
+  "showDetailedImpact": false,
+  "impacts": {
+    "endUsers": [],
+    "applicationDevelopers": [],
+    "storageProviders": [],
+    "toolingInfrastructureDevelopers": []
+  }
+}

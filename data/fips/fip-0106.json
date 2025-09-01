@@ -1,0 +1,12 @@
+{
+  "id": "FIP-0106",
+  "title": "Remove ProveReplicaUpdates method",
+  "description": "Clean up builtin actors and reduce technical debt",
+  "showDetailedImpact": false,
+  "impacts": {
+    "endUsers": [],
+    "applicationDevelopers": [],
+    "storageProviders": [],
+    "toolingInfrastructureDevelopers": []
+  }
+}

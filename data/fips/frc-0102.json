@@ -1,0 +1,32 @@
+{
+  "id": "FRC-0102",
+  "title": "Wallet-Signing Envelope for Arbitrary Messages",
+  "description": "Enhanced storage deal negotiation and verification processes",
+  "showDetailedImpact": true,
+  "impacts": {
+    "endUsers": [
+      "Faster deal confirmation",
+      "Lower storage costs",
+      "Improved data availability",
+      "Initial learning curve for new interfaces"
+    ],
+    "applicationDevelopers": [
+      "New APIs for deal management",
+      "Better error handling",
+      "Enhanced monitoring tools",
+      "API breaking changes require code updates"
+    ],
+    "storageProviders": [
+      "Reduced operational overhead",
+      "Better deal matching",
+      "Improved revenue streams",
+      "Need to update client software",
+      "Temporary increased bandwidth usage during transition"
+    ],
+    "toolingInfrastructureDevelopers": [
+      "Improved signing workflows in SDKs and wallets",
+      "Clear validation primitives for tooling",
+      "Signing libraries and CLIs need updates"
+    ]
+  }
+}

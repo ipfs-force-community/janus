@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { getAllUpgrades } from "@/data/loaders/upgrades"
 import upgradesData from "@/data/upgrades.json"
 import { motion } from "framer-motion"
 import { Calendar, ChevronRight, Clock, GitBranch } from "lucide-react"
@@ -12,10 +13,23 @@ import { useRouter } from "next/navigation"
 import type React from "react"
 import { useEffect, useState } from "react"
 
-const { upgrades: mockUpgrades, metadata } = upgradesData
+const { upgradeIds, metadata } = upgradesData
 const { statusColors, chainColors, fallbacks } = metadata
 
-type Upgrade = (typeof mockUpgrades)[0]
+type Upgrade = {
+  id: string
+  name: string
+  networkVersion: string
+  chain: string
+  epochTarget: number
+  timeTarget: string
+  status: string
+  releaseTag: string
+  specs: string[]
+  links: Record<string, string>
+  notes: string
+  fipIds: string[]
+}
 
 function CountdownTimer({ targetTime }: { targetTime: string }) {
   const [timeLeft, setTimeLeft] = useState("")
@@ -52,7 +66,7 @@ function CountdownTimer({ targetTime }: { targetTime: string }) {
   )
 }
 
-function UpgradeCard({ upgrade }: { upgrade: Upgrade }) {
+function UpgradeCard({ upgrade, upgradeId }: { upgrade: Upgrade; upgradeId: string }) {
   const [expanded, setExpanded] = useState(false)
   const router = useRouter()
 
@@ -60,7 +74,7 @@ function UpgradeCard({ upgrade }: { upgrade: Upgrade }) {
     if ((e.target as HTMLElement).closest("a, button")) {
       return
     }
-    router.push(`/upgrade/${upgrade.id}`)
+    router.push(`/upgrade/${upgradeId}`)
   }
 
   const safeUpgrade = {
@@ -147,11 +161,11 @@ function UpgradeCard({ upgrade }: { upgrade: Upgrade }) {
               <div className="flex flex-wrap gap-2">
                 {safeUpgrade.specs.length > 0 ? (
                   safeUpgrade.specs.map((spec) => {
-                    const isFRC = spec.toLowerCase().startsWith("frc");
+                    const isFRC = spec.toLowerCase().startsWith("frc")
                     const baseUrl = isFRC
                       ? "https://github.com/filecoin-project/FIPs/blob/master/FRCs"
-                      : "https://github.com/filecoin-project/FIPs/blob/master/FIPS";
-                    const url = `${baseUrl}/${spec.toLowerCase()}.md`;
+                      : "https://github.com/filecoin-project/FIPs/blob/master/FIPS"
+                    const url = `${baseUrl}/${spec.toLowerCase()}.md`
 
                     return (
                       <Badge key={spec} variant="outline" className="text-xs">
@@ -165,14 +179,13 @@ function UpgradeCard({ upgrade }: { upgrade: Upgrade }) {
                           {spec}
                         </a>
                       </Badge>
-                    );
+                    )
                   })
                 ) : (
                   <span className="text-sm text-muted-foreground">No FIP specifications available</span>
                 )}
               </div>
             </div>
-
           </div>
 
           <div className="text-xs text-muted-foreground border-t pt-3 mt-4">Click to view detailed FIP analysis →</div>
@@ -185,8 +198,21 @@ function UpgradeCard({ upgrade }: { upgrade: Upgrade }) {
 export default function FilecoinUpgrades() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
+  const [upgrades, setUpgrades] = useState<{ upgrade: Upgrade; upgradeId: string }[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const filteredUpgrades = mockUpgrades.filter((upgrade) => {
+  useEffect(() => {
+    const loadAllUpgrades = () => {
+      setLoading(true)
+      const loadedUpgrades = getAllUpgrades()
+      setUpgrades(loadedUpgrades)
+      setLoading(false)
+    }
+
+    loadAllUpgrades()
+  }, [])
+
+  const filteredUpgrades = upgrades.filter(({ upgrade }) => {
     const matchesStatus = statusFilter === "all" || upgrade.status === statusFilter
     const matchesSearch =
       searchQuery === "" ||
@@ -196,7 +222,18 @@ export default function FilecoinUpgrades() {
     return matchesStatus && matchesSearch
   })
 
-  const statuses = Array.from(new Set(mockUpgrades.map((upgrade) => upgrade.status).filter(Boolean)))
+  const statuses = Array.from(new Set(upgrades.map(({ upgrade }) => upgrade.status).filter(Boolean)))
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading upgrades...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -246,8 +283,8 @@ export default function FilecoinUpgrades() {
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredUpgrades.map((upgrade) => (
-                <UpgradeCard key={upgrade.id} upgrade={upgrade} />
+              {filteredUpgrades.map(({ upgrade, upgradeId }) => (
+                <UpgradeCard key={upgradeId} upgrade={upgrade} upgradeId={upgradeId} />
               ))}
             </div>
           )}

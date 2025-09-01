@@ -1,17 +1,19 @@
 "use client"
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { useRouter, useParams } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
-import { ArrowLeft, Users, HardDrive, Coins, TrendingUp, Star } from "lucide-react"
+import { getFIP } from "@/data/loaders/fips"
+import { getUpgrade } from "@/data/loaders/upgrades"
 import upgradesData from "@/data/upgrades.json"
+import { motion } from "framer-motion"
+import { ArrowLeft, Coins, HardDrive, Star, TrendingUp, Users } from "lucide-react"
+import { useParams, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
-const { upgrades: mockUpgrades, metadata } = upgradesData
+const { metadata } = upgradesData
 const { statusColors, fallbacks } = metadata
 
 const categoryColors = {
@@ -147,14 +149,79 @@ function FIPImpactModal({ fip, isOpen, onClose }: { fip: any; isOpen: boolean; o
   )
 }
 
+const loadUpgrade = async (upgradeId: string) => {
+  try {
+    const upgrade = getUpgrade(upgradeId)
+    if (!upgrade) {
+      throw new Error(`Upgrade ${upgradeId} not found`)
+    }
+    return upgrade
+  } catch (error) {
+    console.error(`Failed to load upgrade ${upgradeId}:`, error)
+    return null
+  }
+}
+
+const loadFIP = async (fipId: string) => {
+  try {
+    const fip = getFIP(fipId)
+    if (!fip) {
+      throw new Error(`FIP ${fipId} not found`)
+    }
+    return fip
+  } catch (error) {
+    console.error(`Failed to load FIP ${fipId}:`, error)
+    return null
+  }
+}
+
 export default function UpgradeDetails() {
   const router = useRouter()
   const params = useParams()
-  const upgradeId = Number.parseInt(params.id as string)
+  const upgradeId = params.id as string
   const [selectedFIP, setSelectedFIP] = useState<any | null>(null)
   const [activeFIPId, setActiveFIPId] = useState<string | null>(null)
+  const [upgrade, setUpgrade] = useState<any>(null)
+  const [fips, setFips] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const upgrade = mockUpgrades.find((u) => u.id === upgradeId)
+  useEffect(() => {
+    const loadUpgradeData = async () => {
+      setLoading(true)
+
+      const upgradeData = await loadUpgrade(upgradeId)
+      if (!upgradeData) {
+        setLoading(false)
+        return
+      }
+
+      setUpgrade(upgradeData)
+
+      const loadedFips = []
+      for (const fipId of upgradeData.fipIds || []) {
+        const fip = await loadFIP(fipId)
+        if (fip) {
+          loadedFips.push(fip)
+        }
+      }
+
+      setFips(loadedFips)
+      setLoading(false)
+    }
+
+    loadUpgradeData()
+  }, [upgradeId])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading upgrade details...</p>
+        </div>
+      </div>
+    )
+  }
 
   if (!upgrade) {
     return (
@@ -176,7 +243,7 @@ export default function UpgradeDetails() {
     notes: upgrade.notes || fallbacks.defaultNotes,
     releaseTag: upgrade.releaseTag || fallbacks.defaultReleaseTag,
     specs: upgrade.specs || fallbacks.emptySpecs,
-    fips: upgrade.fips || [],
+    fips: fips,
   }
 
   return (
@@ -241,11 +308,10 @@ export default function UpgradeDetails() {
                   <a
                     key={fip.id}
                     href={`#${fip.id}`}
-                    className={`block text-sm transition-colors pl-4 py-1 font-mono ${
-                      activeFIPId === fip.id
-                        ? "text-primary font-medium bg-primary/10 rounded-md px-2"
-                        : "text-muted-foreground hover:text-primary"
-                    }`}
+                    className={`block text-sm transition-colors pl-4 py-1 font-mono ${activeFIPId === fip.id
+                      ? "text-primary font-medium bg-primary/10 rounded-md px-2"
+                      : "text-muted-foreground hover:text-primary"
+                      }`}
                     onClick={() => setActiveFIPId(fip.id)}
                   >
                     <span className="inline-flex items-center gap-1">
@@ -270,10 +336,10 @@ export default function UpgradeDetails() {
                   <div className="text-lg">
                     {safeUpgrade.timeTarget
                       ? new Date(safeUpgrade.timeTarget).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
                       : "TBD"}
                   </div>
                 </div>
@@ -301,9 +367,8 @@ export default function UpgradeDetails() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.1 }}
-                      className={`border rounded-lg p-6 hover:shadow-sm transition-all ${
-                        activeFIPId === fip.id ? "border-primary shadow-sm bg-primary/5" : ""
-                      }`}
+                      className={`border rounded-lg p-6 hover:shadow-sm transition-all ${activeFIPId === fip.id ? "border-primary shadow-sm bg-primary/5" : ""
+                        }`}
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
@@ -327,109 +392,89 @@ export default function UpgradeDetails() {
                         </div>
                       </div>
 
-                      {fip.impact && (
+                      {fip.impacts && (
                         <div className="border-t pt-6">
                           <div className="space-y-6">
-                            {fip.impact.endUsers && (
+                            {fip.impacts.endUsers && (
                               <div>
                                 <h5 className="font-medium text-blue-700 dark:text-blue-400 mb-3 flex items-center gap-2">
                                   <Users className="h-4 w-4" />
                                   End Users
                                 </h5>
                                 <ul className="ml-6 space-y-1">
-                                  {[
-                                    ...(fip.impact.endUsers.positive || []),
-                                    ...(fip.impact.endUsers.challenges || []),
-                                    ...(fip.impact.endUsers.neutral || []),
-                                  ].map((impact: string, idx: number) => (
-                                    <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                      <span className="mt-1 text-xs">•</span>
-                                      {impact}
-                                    </li>
-                                  ))}
-                                  {!fip.impact.endUsers.positive?.length &&
-                                    !fip.impact.endUsers.challenges?.length &&
-                                    !fip.impact.endUsers.neutral?.length && (
-                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                    )}
+                                  {fip.impacts.endUsers.length > 0 ? (
+                                    fip.impacts.endUsers.map((impact: string, idx: number) => (
+                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                        <span className="mt-1 text-xs">•</span>
+                                        {impact}
+                                      </li>
+                                    ))
+                                  ) : (
+                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                  )}
                                 </ul>
                               </div>
                             )}
 
-                            {fip.impact.applicationDevelopers && (
+                            {fip.impacts.applicationDevelopers && (
                               <div>
                                 <h5 className="font-medium text-orange-700 dark:text-orange-400 mb-3 flex items-center gap-2">
                                   <Coins className="h-4 w-4" />
                                   Application Developers
                                 </h5>
                                 <ul className="ml-6 space-y-1">
-                                  {[
-                                    ...(fip.impact.applicationDevelopers.positive || []),
-                                    ...(fip.impact.applicationDevelopers.challenges || []),
-                                    ...(fip.impact.applicationDevelopers.neutral || []),
-                                  ].map((impact: string, idx: number) => (
-                                    <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                      <span className="mt-1 text-xs">•</span>
-                                      {impact}
-                                    </li>
-                                  ))}
-                                  {!fip.impact.applicationDevelopers.positive?.length &&
-                                    !fip.impact.applicationDevelopers.challenges?.length &&
-                                    !fip.impact.applicationDevelopers.neutral?.length && (
-                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                    )}
+                                  {fip.impacts.applicationDevelopers.length > 0 ? (
+                                    fip.impacts.applicationDevelopers.map((impact: string, idx: number) => (
+                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                        <span className="mt-1 text-xs">•</span>
+                                        {impact}
+                                      </li>
+                                    ))
+                                  ) : (
+                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                  )}
                                 </ul>
                               </div>
                             )}
 
-                            {fip.impact.storageProviders && (
+                            {fip.impacts.storageProviders && (
                               <div>
                                 <h5 className="font-medium text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-2">
                                   <HardDrive className="h-4 w-4" />
                                   Storage Providers
                                 </h5>
                                 <ul className="ml-6 space-y-1">
-                                  {[
-                                    ...(fip.impact.storageProviders.positive || []),
-                                    ...(fip.impact.storageProviders.challenges || []),
-                                    ...(fip.impact.storageProviders.neutral || []),
-                                  ].map((impact: string, idx: number) => (
-                                    <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                      <span className="mt-1 text-xs">•</span>
-                                      {impact}
-                                    </li>
-                                  ))}
-                                  {!fip.impact.storageProviders.positive?.length &&
-                                    !fip.impact.storageProviders.challenges?.length &&
-                                    !fip.impact.storageProviders.neutral?.length && (
-                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                    )}
+                                  {fip.impacts.storageProviders.length > 0 ? (
+                                    fip.impacts.storageProviders.map((impact: string, idx: number) => (
+                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                        <span className="mt-1 text-xs">•</span>
+                                        {impact}
+                                      </li>
+                                    ))
+                                  ) : (
+                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                  )}
                                 </ul>
                               </div>
                             )}
 
-                            {fip.impact.toolingInfrastructureDevelopers && (
+                            {fip.impacts.toolingInfrastructureDevelopers && (
                               <div>
                                 <h5 className="font-medium text-muted-foreground mb-3 flex items-center gap-2">
                                   <TrendingUp className="h-4 w-4" />
                                   Tooling / Infrastructure Developers
                                 </h5>
                                 <ul className="ml-6 space-y-1">
-                                  {[
-                                    ...(fip.impact.toolingInfrastructureDevelopers.positive || []),
-                                    ...(fip.impact.toolingInfrastructureDevelopers.challenges || []),
-                                    ...(fip.impact.toolingInfrastructureDevelopers.neutral || []),
-                                  ].map((impact: string, idx: number) => (
-                                    <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                      <span className="mt-1 text-xs">•</span>
-                                      {impact}
-                                    </li>
-                                  ))}
-                                  {!fip.impact.toolingInfrastructureDevelopers.positive?.length &&
-                                    !fip.impact.toolingInfrastructureDevelopers.challenges?.length &&
-                                    !fip.impact.toolingInfrastructureDevelopers.neutral?.length && (
-                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                    )}
+                                  {fip.impacts.toolingInfrastructureDevelopers.length > 0 ? (
+                                    fip.impacts.toolingInfrastructureDevelopers.map((impact: string, idx: number) => (
+                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                        <span className="mt-1 text-xs">•</span>
+                                        {impact}
+                                      </li>
+                                    ))
+                                  ) : (
+                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                  )}
                                 </ul>
                               </div>
                             )}

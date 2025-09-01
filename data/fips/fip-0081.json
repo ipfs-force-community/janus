@@ -1,0 +1,21 @@
+{
+  "id": "FIP-0081",
+  "title": "Enhanced Security Framework",
+  "description": "Advanced cryptographic improvements and security enhancements",
+  "showDetailedImpact": true,
+  "impacts": {
+    "endUsers": ["Better data protection", "Enhanced privacy features", "May require wallet updates"],
+    "applicationDevelopers": ["New security APIs", "Better audit tools", "Security model changes require code review"],
+    "storageProviders": [
+      "Improved sector security",
+      "Better fraud detection",
+      "Need to update security protocols",
+      "Additional verification steps"
+    ],
+    "toolingInfrastructureDevelopers": [
+      "Updated cryptographic libraries",
+      "CLI support for new verification flows",
+      "Toolchains must adopt new primitives"
+    ]
+  }
+}

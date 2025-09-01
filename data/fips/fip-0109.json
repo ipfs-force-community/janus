@@ -1,0 +1,12 @@
+{
+  "id": "FIP-0109",
+  "title": "Enable smart contract notifications for Direct Data Onboarding (DDO)",
+  "description": "Improved data retrieval mechanisms and caching strategies",
+  "showDetailedImpact": true,
+  "impacts": {
+    "endUsers": [],
+    "applicationDevelopers": [],
+    "storageProviders": [],
+    "toolingInfrastructureDevelopers": []
+  }
+}

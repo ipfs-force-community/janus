@@ -1,0 +1,12 @@
+{
+  "id": "FIP-0101",
+  "title": "Remove ProveCommitAggregate method",
+  "description": "Builtin actor cleanup and reduction of technical debt",
+  "showDetailedImpact": false,
+  "impacts": {
+    "endUsers": [],
+    "applicationDevelopers": [],
+    "storageProviders": [],
+    "toolingInfrastructureDevelopers": []
+  }
+}

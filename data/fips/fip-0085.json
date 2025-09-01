@@ -1,0 +1,20 @@
+{
+  "id": "FIP-0085",
+  "title": "Protocol Optimization",
+  "description": "Core protocol improvements for better performance",
+  "showDetailedImpact": true,
+  "impacts": {
+    "endUsers": ["Faster network operations", "Lower transaction fees"],
+    "applicationDevelopers": ["Improved SDK performance", "Better debugging tools", "Some internal APIs may change"],
+    "storageProviders": [
+      "Reduced operational costs",
+      "Better network efficiency",
+      "Temporary increased resource usage during upgrade"
+    ],
+    "toolingInfrastructureDevelopers": [
+      "New profiling hooks",
+      "CI can validate performance regressions",
+      "Benchmark suites must be updated"
+    ]
+  }
+}

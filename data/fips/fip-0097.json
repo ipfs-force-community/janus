@@ -1,0 +1,20 @@
+{
+  "id": "FIP-0097",
+  "title": "Consensus Mechanism Enhancement",
+  "description": "Improved consensus algorithm for better network stability",
+  "showDetailedImpact": true,
+  "impacts": {
+    "endUsers": ["More reliable network", "Faster transaction finality"],
+    "applicationDevelopers": ["More predictable block times", "Better network monitoring"],
+    "storageProviders": [
+      "Reduced fork probability",
+      "Better reward predictability",
+      "Slight increase in computational requirements"
+    ],
+    "toolingInfrastructureDevelopers": [
+      "Cleaner metrics for consensus health",
+      "Improved node observability hooks",
+      "Monitoring stacks need minor updates"
+    ]
+  }
+}

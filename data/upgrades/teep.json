@@ -1,0 +1,28 @@
+{
+    "id": "teep",
+    "name": "Teep",
+    "networkVersion": "nv25",
+    "chain": "Mainnet",
+    "epochTarget": 4878840,
+    "timeTarget": "2025-04-14T23:00:00Z",
+    "status": "Finalized",
+    "releaseTag": "lotus v1.32.2",
+    "specs": [
+        "FIP-0097",
+        "FIP-0098",
+        "FIP-0100",
+        "FIP-0086"
+    ],
+    "links": {
+        "releaseNotes": "https://github.com/filecoin-project/lotus/releases/tag/v1.32.2",
+        "blog": "https://filecoin.io/blog/skyrise-upgrade",
+        "discussion": "https://github.com/filecoin-project/FIPs/discussions/878"
+    },
+    "notes": "Enhanced consensus mechanisms and improved network stability.",
+    "fipIds": [
+        "fip-0097",
+        "fip-0098",
+        "fip-0100",
+        "fip-0086"
+    ]
+}

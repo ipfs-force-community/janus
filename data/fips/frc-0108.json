@@ -1,0 +1,12 @@
+{
+  "id": "FRC-0108",
+  "title": "Filecoin Snapshot Format",
+  "description": "Introduce a v2 Filecoin snapshot format to include F3 snapshot data for faster node bootstrapping and reduced network bandwidth usage.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "endUsers": [],
+    "applicationDevelopers": [],
+    "storageProviders": [],
+    "toolingInfrastructureDevelopers": []
+  }
+}
