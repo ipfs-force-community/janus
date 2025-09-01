@@ -309,15 +309,26 @@ export default function UpgradeDetails() {
                   <a
                     key={fip.id}
                     href={`#${fip.id}`}
-                    className={`block text-sm transition-colors pl-4 py-1 font-mono ${activeFIPId === fip.id
+                    className={`group block text-sm transition-colors pl-4 py-1 font-mono ${activeFIPId === fip.id
                       ? "text-primary font-medium bg-primary/10 rounded-md px-2"
                       : "text-muted-foreground hover:text-primary"
                       }`}
                     onClick={() => setActiveFIPId(fip.id)}
+                    title={fip.title}
                   >
-                    <span className="inline-flex items-center gap-1">
-                      {isFip0077(fip) && <Star className="h-3.5 w-3.5 text-amber-500" aria-label="Important FIP" />}
-                      {fip.id}
+                    <span className="flex items-center gap-2 min-w-0">
+                      {isFip0077(fip) && (
+                        <Star className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" aria-label="Important FIP" />
+                      )}
+                      <span className="flex-shrink-0">{fip.id}: </span>
+                      <span
+                        className={`truncate flex-1 min-w-0 ${activeFIPId === fip.id
+                          ? "text-primary"
+                          : "text-muted-foreground group-hover:text-primary"
+                          }`}
+                      >
+                        {fip.title}
+                      </span>
                     </span>
                   </a>
                 ))}
