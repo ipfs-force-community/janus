@@ -4,29 +4,27 @@
   "description": "A deposit requirement for creating new miner actors to prevent unnecessary miner ID creation and potential network spam attacks",
   "showDetailedImpact": true,
   "impacts": {
-    "endUsers": [
-      "No direct impact: End users (those who store or retrieve data) are not involved in miner creation, so this FIP does not directly affect them.",
-      "Indirect network benefit: By reducing unnecessary miner IDs and potential network spam, the overall network efficiency may improve, indirectly benefitting end users.",
-      "No need for user action: End users do not need to adapt or change their behavior due to this FIP."
+    "storageProviders": [
+      "A new deposit is required when creating a miner (approximately 10% of the initial pledge for 10 TiB, linearly vested over 180 days), which raises the entry barrier for creating new miner IDs and encourages storage providers to be more cautious when expanding or creating miners.",
+      "For active and compliant storage providers, the deposit is eventually released and does not affect long-term revenue, but it introduces short-term liquidity costs.",
+      "Storage providers are more likely to reuse existing miner IDs, reducing irrational behaviors such as ID grabbing or deadline competition, thereby optimizing network resource usage.",
+      "Small or new storage providers must plan their capital carefully to avoid financial pressure caused by the deposit requirement."
+    ],
+    "clients": [
+      "Clients who store data on the Filecoin network are only indirectly affected by this FIP.",
+      "The indirect impact is a healthier network: fewer redundant miner IDs, slower chain state growth, and improved operational efficiency, leading to more stable storage services.",
+      "A potential long-term effect is that if some storage providers reduce expansion or exit due to the deposit mechanism, storage supply could be slightly affected, but the overall impact remains limited."
+    ],
+    "tokenHolders": [
+      "FIP-0077 does not permanently burn any tokens—the deposit is eventually returned to miners, so it is a temporary lock rather than destruction.",
+      "This means there is no direct reduction in circulating supply, but in the short term some FIL will be locked, which may slightly reduce liquidity.",
+      "By making the network healthier and more resilient to spam or attacks, the upgrade provides long-term benefits to the ecosystem and stability to FIL value."
     ],
     "applicationDevelopers": [
-      "Minimal direct impact as most apps do not handle miner creation.",
-      "Improved network stability may benefit applications.",
-      "API compatibility: Apps that automate miner creation can now rely on reduced spam and more predictable network behavior.",
-      "If the application handles miner creation, it needs to update error handling and support the deposit parameter."
-    ],
-    "storageProviders": [
-      "Discourages wasteful creation of unused miner actors, making the network more efficient.",
-      "Deposit is refundable (vested over 180 days), so legitimate storage providers are not permanently penalized.",
-      "Reduces incentive for spam or mass miner creation, leading to fairer network conditions.",
-      "Increased entry and operational cost when creating new miner actors.",
-      "Existing operational scripts and onboarding procedures may need updates to handle the deposit requirement."
-    ],
-    "toolingInfrastructureDevelopers": [
-      "Clearer process for handling miner creation, as deposit logic is now standardized.",
-      "Fewer spam miner actors to track, simplifying monitoring and analytics.",
-      "SDKs, CLI tools, and automation scripts must be updated to support the new deposit mechanism and related error handling.",
-      "Automated tests and documentation will require updates."
+      "Developers need to adapt to the new miner creation logic, including API parameters, chain state handling, and test cases.",
+      "The existing pledge and vesting mechanisms are reused, so implementation cost is relatively low, but compatibility and boundary testing must be considered to ensure a smooth upgrade.",
+      "With slower chain state growth and fewer spam miners, future protocol maintenance and iteration will be easier.",
+      "SDKs, tools, and related infrastructure need updates and clear upgrade guidance to avoid user-side errors caused by API changes."
     ]
   }
 }

@@ -4,8 +4,14 @@
   "description": "Improved consensus algorithm for better network stability",
   "showDetailedImpact": true,
   "impacts": {
-    "endUsers": ["More reliable network", "Faster transaction finality"],
-    "applicationDevelopers": ["More predictable block times", "Better network monitoring"],
+    "endUsers": [
+      "More reliable network",
+      "Faster transaction finality"
+    ],
+    "applicationDevelopers": [
+      "More predictable block times",
+      "Better network monitoring"
+    ],
     "storageProviders": [
       "Reduced fork probability",
       "Better reward predictability",

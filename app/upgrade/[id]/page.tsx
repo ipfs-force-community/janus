@@ -407,52 +407,10 @@ export default function UpgradeDetails() {
                       {fip.impacts && (
                         <div className="border-t pt-6">
                           <div className="space-y-6">
-                            {fip.impacts.endUsers && (
+                            {fip.impacts.storageProviders && (
                               <div>
                                 <h5 className="font-medium text-blue-700 dark:text-blue-400 mb-3 flex items-center gap-2">
                                   <Users className="h-4 w-4" />
-                                  End Users
-                                </h5>
-                                <ul className="ml-6 space-y-1">
-                                  {fip.impacts.endUsers.length > 0 ? (
-                                    fip.impacts.endUsers.map((impact: string, idx: number) => (
-                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                        <span className="mt-1 text-xs">•</span>
-                                        {impact}
-                                      </li>
-                                    ))
-                                  ) : (
-                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-
-                            {fip.impacts.applicationDevelopers && (
-                              <div>
-                                <h5 className="font-medium text-orange-700 dark:text-orange-400 mb-3 flex items-center gap-2">
-                                  <Coins className="h-4 w-4" />
-                                  Application Developers
-                                </h5>
-                                <ul className="ml-6 space-y-1">
-                                  {fip.impacts.applicationDevelopers.length > 0 ? (
-                                    fip.impacts.applicationDevelopers.map((impact: string, idx: number) => (
-                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                        <span className="mt-1 text-xs">•</span>
-                                        {impact}
-                                      </li>
-                                    ))
-                                  ) : (
-                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-
-                            {fip.impacts.storageProviders && (
-                              <div>
-                                <h5 className="font-medium text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-2">
-                                  <HardDrive className="h-4 w-4" />
                                   Storage Providers
                                 </h5>
                                 <ul className="ml-6 space-y-1">
@@ -470,15 +428,57 @@ export default function UpgradeDetails() {
                               </div>
                             )}
 
-                            {fip.impacts.toolingInfrastructureDevelopers && (
+                            {fip.impacts.clients && (
+                              <div>
+                                <h5 className="font-medium text-orange-700 dark:text-orange-400 mb-3 flex items-center gap-2">
+                                  <Coins className="h-4 w-4" />
+                                  Clients
+                                </h5>
+                                <ul className="ml-6 space-y-1">
+                                  {fip.impacts.clients.length > 0 ? (
+                                    fip.impacts.clients.map((impact: string, idx: number) => (
+                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                        <span className="mt-1 text-xs">•</span>
+                                        {impact}
+                                      </li>
+                                    ))
+                                  ) : (
+                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                  )}
+                                </ul>
+                              </div>
+                            )}
+
+                            {fip.impacts.tokenHolders && (
+                              <div>
+                                <h5 className="font-medium text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-2">
+                                  <HardDrive className="h-4 w-4" />
+                                  Token Holders
+                                </h5>
+                                <ul className="ml-6 space-y-1">
+                                  {fip.impacts.tokenHolders.length > 0 ? (
+                                    fip.impacts.tokenHolders.map((impact: string, idx: number) => (
+                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                        <span className="mt-1 text-xs">•</span>
+                                        {impact}
+                                      </li>
+                                    ))
+                                  ) : (
+                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                  )}
+                                </ul>
+                              </div>
+                            )}
+
+                            {fip.impacts.applicationDevelopers && (
                               <div>
                                 <h5 className="font-medium text-muted-foreground mb-3 flex items-center gap-2">
                                   <TrendingUp className="h-4 w-4" />
-                                  Tooling / Infrastructure Developers
+                                  Application Developers
                                 </h5>
                                 <ul className="ml-6 space-y-1">
-                                  {fip.impacts.toolingInfrastructureDevelopers.length > 0 ? (
-                                    fip.impacts.toolingInfrastructureDevelopers.map((impact: string, idx: number) => (
+                                  {fip.impacts.applicationDevelopers.length > 0 ? (
+                                    fip.impacts.applicationDevelopers.map((impact: string, idx: number) => (
                                       <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
                                         <span className="mt-1 text-xs">•</span>
                                         {impact}
