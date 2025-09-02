@@ -1,20 +1,26 @@
 {
   "id": "FIP-0085",
-  "title": "Protocol Optimization",
-  "description": "Core protocol improvements for better performance",
+  "title": "Convert f090 Mining Reserve actor to a keyless account actor",
+  "description": "Convert the FIL mining reserve actor at address f090 from a multisig with individual keyholders to a keyless account actor, ensuring network-governed control and removing individual ownership over reserve funds.",
   "showDetailedImpact": true,
   "impacts": {
-    "endUsers": ["Faster network operations", "Lower transaction fees"],
-    "applicationDevelopers": ["Improved SDK performance", "Better debugging tools", "Some internal APIs may change"],
     "storageProviders": [
-      "Reduced operational costs",
-      "Better network efficiency",
-      "Temporary increased resource usage during upgrade"
+      "No direct operational impact for storage providers, but strengthens trust in long-term network governance of mining reserve FIL.",
+      "Reduces risk that reserve funds could be mismanaged or misused by a small group of keyholders, indirectly supporting fairer incentives and network integrity."
     ],
-    "toolingInfrastructureDevelopers": [
-      "New profiling hooks",
-      "CI can validate performance regressions",
-      "Benchmark suites must be updated"
+    "clients": [
+      "Clients gain assurance that the mining reserve is governed transparently by network consensus rather than individuals.",
+      "No direct effect on client usage or storage guarantees, but increased security and stability of the network incentivizes long-term client engagement."
+    ],
+    "tokenHolders": [
+      "Removes individual control over 15% of total FIL supply, placing its governance in the hands of network participants.",
+      "Improves transparency and reduces risk of unilateral or collusive actions affecting reserved FIL.",
+      "May increase token holder confidence in Filecoin’s governance and decrease perceived risk of centralized control."
+    ],
+    "applicationDevelopers": [
+      "No changes required for most developer tools, APIs, or SDKs unless they interface directly with f090 or multisig actor types.",
+      "Developers should be aware that f090 is no longer a multisig and cannot be interacted with as such; it is now a keyless account actor.",
+      "Test cases and simulation environments referencing f090 must update actor type and related actor cid expectations."
     ]
   }
 }

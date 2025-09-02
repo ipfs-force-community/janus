@@ -1,26 +1,26 @@
 {
   "id": "FIP-0097",
-  "title": "Consensus Mechanism Enhancement",
-  "description": "Improved consensus algorithm for better network stability",
+  "title": "Add Support for EIP-1153 (Transient Storage) in the FEVM",
+  "description": "Introduce EIP-1153 transient storage to the Filecoin Ethereum Virtual Machine (FEVM), enabling transaction-scoped temporary data storage via new opcodes TLOAD and TSTORE, for improved compatibility and smart contract functionality.",
   "showDetailedImpact": true,
   "impacts": {
-    "endUsers": [
-      "More reliable network",
-      "Faster transaction finality"
+    "storageProviders": [
+      "No direct impact on storage providers’ operational routines or economics.",
+      "Indirectly benefits the ecosystem by enabling more advanced and secure smart contracts, potentially driving network usage and utility."
+    ],
+    "clients": [
+      "Clients interacting with FEVM-based contracts benefit from improved security and efficiency, as developers can use transient storage to implement safe reentrancy and temporary state handling.",
+      "Enables more sophisticated decentralized applications on Filecoin, enhancing client experience and reliability."
+    ],
+    "tokenHolders": [
+      "Improves the FEVM’s compatibility with Ethereum tooling, attracting more developers and projects to the ecosystem—potentially increasing FIL utility and demand.",
+      "No change to token supply, governance, or direct economic parameters, but may indirectly benefit token holders through ecosystem growth."
     ],
     "applicationDevelopers": [
-      "More predictable block times",
-      "Better network monitoring"
-    ],
-    "storageProviders": [
-      "Reduced fork probability",
-      "Better reward predictability",
-      "Slight increase in computational requirements"
-    ],
-    "toolingInfrastructureDevelopers": [
-      "Cleaner metrics for consensus health",
-      "Improved node observability hooks",
-      "Monitoring stacks need minor updates"
+      "Developers gain access to EIP-1153 features (TLOAD, TSTORE), allowing efficient management of transaction-scoped temporary data in smart contracts.",
+      "Facilitates safer contract patterns, such as improved reentrancy handling and gas optimization.",
+      "Requires minor changes to contract code (inline assembly for TLOAD/TSTORE) and awareness of transient storage lifecycle rules.",
+      "Ensures full backward compatibility; legacy contracts remain unaffected unless new features are explicitly used."
     ]
   }
 }

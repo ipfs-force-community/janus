@@ -8,7 +8,7 @@ import { getFIP } from "@/data/loaders/fips"
 import { getUpgrade } from "@/data/loaders/upgrades"
 import upgradesData from "@/data/upgrades.json"
 import { motion } from "framer-motion"
-import { ArrowLeft, Coins, HardDrive, Star, TrendingUp, Users } from "lucide-react"
+import { ArrowLeft, Code, DollarSign, Server, Star, TrendingUp, User } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
@@ -410,7 +410,7 @@ export default function UpgradeDetails() {
                             {fip.impacts.storageProviders && (
                               <div>
                                 <h5 className="font-medium text-blue-700 dark:text-blue-400 mb-3 flex items-center gap-2">
-                                  <Users className="h-4 w-4" />
+                                  <Server className="h-4 w-4" />
                                   Storage Providers
                                 </h5>
                                 <ul className="ml-6 space-y-1">
@@ -431,7 +431,7 @@ export default function UpgradeDetails() {
                             {fip.impacts.clients && (
                               <div>
                                 <h5 className="font-medium text-orange-700 dark:text-orange-400 mb-3 flex items-center gap-2">
-                                  <Coins className="h-4 w-4" />
+                                  <User className="h-4 w-4" />
                                   Clients
                                 </h5>
                                 <ul className="ml-6 space-y-1">
@@ -452,7 +452,7 @@ export default function UpgradeDetails() {
                             {fip.impacts.tokenHolders && (
                               <div>
                                 <h5 className="font-medium text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-2">
-                                  <HardDrive className="h-4 w-4" />
+                                  <DollarSign className="h-4 w-4" />
                                   Token Holders
                                 </h5>
                                 <ul className="ml-6 space-y-1">
@@ -472,8 +472,8 @@ export default function UpgradeDetails() {
 
                             {fip.impacts.applicationDevelopers && (
                               <div>
-                                <h5 className="font-medium text-muted-foreground mb-3 flex items-center gap-2">
-                                  <TrendingUp className="h-4 w-4" />
+                                <h5 className="font-medium text-green-700 dark:text-green-400 mb-3 flex items-center gap-2">
+                                  <Code className="h-4 w-4" />
                                   Application Developers
                                 </h5>
                                 <ul className="ml-6 space-y-1">

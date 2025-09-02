@@ -1,32 +1,26 @@
 {
   "id": "FRC-0102",
   "title": "Wallet-Signing Envelope for Arbitrary Messages",
-  "description": "Enhanced storage deal negotiation and verification processes",
+  "description": "Defines a standardized envelope for signing arbitrary messages with Filecoin and FEVM wallets, using version bytes to distinguish contexts and align with Ethereum standards for improved security and interoperability.",
   "showDetailedImpact": true,
   "impacts": {
-    "endUsers": [
-      "Faster deal confirmation",
-      "Lower storage costs",
-      "Improved data availability",
-      "Initial learning curve for new interfaces"
+    "storageProviders": [
+      "No direct operational impact, but improved wallet and dapp security benefits the whole network ecosystem.",
+      "Reduces risk of transaction spoofing or misclassification, supporting more trusted network interactions."
+    ],
+    "clients": [
+      "Clients benefit from enhanced security when signing non-transaction messages, minimizing risks of replay attacks and misinterpretation.",
+      "Improved cross-ecosystem compatibility with Ethereum wallets and standards reduces integration friction for client developers."
+    ],
+    "tokenHolders": [
+      "Increases user trust by reducing attack vectors in wallet signing, indirectly supporting FIL’s reputation and utility.",
+      "No direct effect on token economics or governance, but safer wallet practices can strengthen ecosystem stability."
     ],
     "applicationDevelopers": [
-      "New APIs for deal management",
-      "Better error handling",
-      "Enhanced monitoring tools",
-      "API breaking changes require code updates"
-    ],
-    "storageProviders": [
-      "Reduced operational overhead",
-      "Better deal matching",
-      "Improved revenue streams",
-      "Need to update client software",
-      "Temporary increased bandwidth usage during transition"
-    ],
-    "toolingInfrastructureDevelopers": [
-      "Improved signing workflows in SDKs and wallets",
-      "Clear validation primitives for tooling",
-      "Signing libraries and CLIs need updates"
+      "Developers should update wallet and application signing logic to use the proposed envelope format and version bytes for all arbitrary message signing.",
+      "Facilitates easier migration of dapps and tools between Filecoin and Ethereum ecosystems, leveraging familiar standards (EIP-191, EIP-712).",
+      "Implementations must ensure proper context discrimination (e.g., chainId, message domain) to avoid replay attacks and other security pitfalls.",
+      "No consensus or protocol changes required; updates are at the client/application layer."
     ]
   }
 }

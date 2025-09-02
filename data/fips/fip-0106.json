@@ -4,9 +4,9 @@
   "description": "Clean up builtin actors and reduce technical debt",
   "showDetailedImpact": false,
   "impacts": {
-    "endUsers": [],
-    "applicationDevelopers": [],
     "storageProviders": [],
-    "toolingInfrastructureDevelopers": []
+    "clients": [],
+    "tokenHolders": [],
+    "applicationDevelopers": []
   }
 }

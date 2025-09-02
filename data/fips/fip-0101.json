@@ -4,9 +4,9 @@
   "description": "Builtin actor cleanup and reduction of technical debt",
   "showDetailedImpact": false,
   "impacts": {
-    "endUsers": [],
-    "applicationDevelopers": [],
     "storageProviders": [],
-    "toolingInfrastructureDevelopers": []
+    "clients": [],
+    "tokenHolders": [],
+    "applicationDevelopers": []
   }
 }

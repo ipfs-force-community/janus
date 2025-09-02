@@ -1,21 +1,30 @@
 {
   "id": "FIP-0081",
-  "title": "Enhanced Security Framework",
-  "description": "Advanced cryptographic improvements and security enhancements",
+  "title": "Introduce lower bound for sector initial pledge",
+  "description": "Refactor the sector initial pledge calculation to establish a non-zero lower bound, ensuring network collateral does not tend to zero even as baseline growth exceeds QAP, and improve consensus security and circulating supply stability.",
   "showDetailedImpact": true,
   "impacts": {
-    "endUsers": ["Better data protection", "Enhanced privacy features", "May require wallet updates"],
-    "applicationDevelopers": ["New security APIs", "Better audit tools", "Security model changes require code review"],
     "storageProviders": [
-      "Improved sector security",
-      "Better fraud detection",
-      "Need to update security protocols",
-      "Additional verification steps"
+      "The initial pledge calculation is split into 'simple' and 'baseline' components, with a ramped activation parameter (gamma) determining their contribution. This introduces a non-zero lower bound for initial pledge requirements.",
+      "For most onboarding scenarios, especially in the short term, the change will have negligible impact on required collateral. Over time, as network QAP lags baseline, the minimum pledge increases compared to the previous formula.",
+      "This preserves incentives for consensus security and may slightly increase the cost of onboarding new storage, especially when network growth slows.",
+      "Storage providers are assured that pledge requirements will not fall to near zero, supporting network health and reducing risks from low collateral periods."
     ],
-    "toolingInfrastructureDevelopers": [
-      "Updated cryptographic libraries",
-      "CLI support for new verification flows",
-      "Toolchains must adopt new primitives"
+    "clients": [
+      "Clients are indirectly affected through improvements in network security and stability, as a non-zero pledge helps prevent consensus risks and supply shocks.",
+      "The change reduces the likelihood that rapid declines in pledge requirements will incentivize short-term, insecure storage provision or destabilize storage pricing.",
+      "A more stable network with predictable collateral requirements ensures more reliable long-term storage services for clients."
+    ],
+    "tokenHolders": [
+      "By maintaining a floor for pledged collateral, FIP-0081 helps prevent excessive increases in circulating supply, which could put downward pressure on FIL value.",
+      "Locked tokens for pledges remain significant, supporting token scarcity and helping stabilize ecosystem value over time.",
+      "The change does not fundamentally alter the minting or vesting logic, but ensures network security is not sacrificed for incentives, benefiting long-term token holders."
+    ],
+    "applicationDevelopers": [
+      "Developers must update pledge calculation logic to support the new convex combination formula and ramped activation parameters.",
+      "Actor APIs and state structures are modified to pass and store ramp configuration, requiring compatibility updates and migration handling.",
+      "Test cases and simulation tools need to be updated to reflect new pledge logic and ramp activation scenarios.",
+      "The change improves economic predictability and system health, reducing the risk of future radical protocol adjustments or insecure network states."
     ]
   }
 }

@@ -1,12 +1,25 @@
 {
   "id": "FRC-0108",
   "title": "Filecoin Snapshot Format",
-  "description": "Introduce a v2 Filecoin snapshot format to include F3 snapshot data for faster node bootstrapping and reduced network bandwidth usage.",
-  "showDetailedImpact": false,
+  "description": "Defines v2 of the Filecoin snapshot (CAR) format, embedding an F3 finality certificate snapshot to accelerate node bootstrapping and reduce network bandwidth usage.",
+  "showDetailedImpact": true,
   "impacts": {
-    "endUsers": [],
-    "applicationDevelopers": [],
-    "storageProviders": [],
-    "toolingInfrastructureDevelopers": []
+    "storageProviders": [
+      "No direct impact on storage providers’ mining or deal operations, but improved node start-up times may benefit operational reliability and upgrades.",
+      "Faster bootstrapping enables quicker recovery and onboarding of new nodes, supporting better decentralization and redundancy."
+    ],
+    "clients": [
+      "Clients benefit indirectly from more robust and rapidly accessible Filecoin nodes, increasing overall network reliability for storage and retrieval.",
+      "Reduced network bandwidth use for node bootstrapping may improve ecosystem performance and client experience."
+    ],
+    "tokenHolders": [
+      "No direct impact on FIL token economics or supply.",
+      "Indirect benefits from improved network robustness and decentralization, which may enhance long-term ecosystem value and trust."
+    ],
+    "applicationDevelopers": [
+      "Developers building node software (e.g., Lotus, Forest, Venus) must implement support for v2 snapshot format and F3 data integration.",
+      "Snapshot consumers or tooling must be updated for v2, but backward compatibility allows continued use of v1 format during transition.",
+      "F3 package maintainers should ensure compatibility for import/export APIs to maintain seamless integration."
+    ]
   }
 }

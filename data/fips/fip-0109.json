@@ -1,12 +1,26 @@
 {
   "id": "FIP-0109",
   "title": "Enable smart contract notifications for Direct Data Onboarding (DDO)",
-  "description": "Improved data retrieval mechanisms and caching strategies",
+  "description": "Removes the restriction limiting sector content change notifications to the storage market actor, allowing any actor (e.g., smart contracts) to receive FRC-42 notifications for DDO events, enabling new use cases and integrations.",
   "showDetailedImpact": true,
   "impacts": {
-    "endUsers": [],
-    "applicationDevelopers": [],
-    "storageProviders": [],
-    "toolingInfrastructureDevelopers": []
+    "storageProviders": [
+      "Storage providers can now specify any actor (not just the market actor) to receive notifications about sector data onboarding, enabling integration with custom marketplaces, DAOs, and DeFi applications.",
+      "Providers retain control via the require_notification_success flag, allowing them to determine whether notification failures abort sector commitments.",
+      "Notification grouping by notifee reduces gas costs and allows providers to optimize notification delivery."
+    ],
+    "clients": [
+      "Clients can benefit from enhanced data availability and verification schemes implemented by smart contracts that receive direct notifications.",
+      "Enables real-time tracking and more dynamic storage services, potentially improving reliability and transparency for client applications."
+    ],
+    "tokenHolders": [
+      "Expands the utility and programmability of Filecoin, potentially increasing network activity and FIL usage for new DeFi and data-centric applications.",
+      "No direct impact on FIL supply or economics, but indirect benefits through ecosystem growth and innovation."
+    ],
+    "applicationDevelopers": [
+      "Smart contract developers can now implement logic that responds directly to sector data onboarding events, supporting custom deal activation, verification, and other advanced use cases.",
+      "Developers must implement secure notification handling, including caller verification and CBOR parameter decoding, and consider gas usage and failure handling.",
+      "Filecoin tooling (e.g., filecoin-solidity) will need updates to support new notification types and data structures."
+    ]
   }
 }
