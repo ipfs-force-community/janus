@@ -1,14 +1,17 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
-import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { GeistMono } from "geist/font/mono"
+import { GeistSans } from "geist/font/sans"
+import type { Metadata } from "next"
+import type React from "react"
+import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Filecoin Network Upgrades",
   description: "Track Filecoin network upgrades and their status",
   generator: "v0.app",
+  icons: {
+    icon: "/globe.svg",
+  },
 }
 
 export default function RootLayout({

@@ -237,7 +237,7 @@ export default function FilecoinUpgrades() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-6">
@@ -246,7 +246,9 @@ export default function FilecoinUpgrades() {
               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Filecoin Upgrades
               </h1>
-              <p className="text-muted-foreground mt-2">Track Filecoin Mainnet upgrades and their progress</p>
+              <p className="text-muted-foreground mt-2">
+                Track Filecoin Mainnet upgrades and their progress
+              </p>
             </div>
             <ThemeToggle />
           </div>
@@ -254,7 +256,7 @@ export default function FilecoinUpgrades() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="flex-1 container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <Input
             placeholder="Search by name or version (e.g., Dragon, nv28)..."
@@ -280,7 +282,9 @@ export default function FilecoinUpgrades() {
         <div className="mt-8">
           {filteredUpgrades.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No upgrades found matching your criteria.</p>
+              <p className="text-muted-foreground">
+                No upgrades found matching your criteria.
+              </p>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -293,12 +297,10 @@ export default function FilecoinUpgrades() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-card mt-16">
-        <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between">
-          <p className="text-sm text-muted-foreground mb-2 md:mb-0">
-            Powered by Venus
-          </p>
-          <div className="flex items-center gap-4">
+      <footer className="border-t bg-card mt-auto">
+        <div className="container mx-auto px-4 py-6 flex flex-col items-center gap-2 text-center">
+          <p className="text-sm text-muted-foreground">Powered by Venus</p>
+          <div className="flex items-center gap-6">
             <a
               href="https://filecoinproject.slack.com/archives/CEHHJNJS3"
               target="_blank"
