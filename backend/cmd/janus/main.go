@@ -5,9 +5,11 @@ import (
 	"log"
 	"os"
 
+	"github.com/urfave/cli/v3"
+
 	"github.com/ipfs-force-community/janus/chain"
 	"github.com/ipfs-force-community/janus/database/mysql"
-	"github.com/urfave/cli/v3"
+	"github.com/ipfs-force-community/janus/database/orm"
 )
 
 type contextKey string
@@ -32,7 +34,7 @@ func main() {
 			&cli.Int64Flag{
 				Name:  "start_epoch",
 				Usage: "Start epoch to sync from",
-				Value: 0,
+				Value: 4578563,
 			},
 			&cli.Int64Flag{
 				Name:  "end_epoch",
@@ -52,6 +54,11 @@ func main() {
 			if err != nil {
 				return ctx, err
 			}
+
+			if err := db.AutoMigrate(&orm.Miner{}); err != nil {
+				return ctx, err
+			}
+
 			ctx = context.WithValue(ctx, contextKey("db"), db)
 
 			client, err := chain.NewClient(ctx, c.String("node_endpoint"), "")

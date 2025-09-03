@@ -13,8 +13,14 @@ import (
 
 const batchBlockNum = 1000
 
+type BlockMeta struct {
+	Height    int64
+	Cid       cid.Cid
+	Timestamp int64
+}
+
 // MsgHandler defines the function type for handling messages during block synchronization
-type MsgHandler func(epoch abi.ChainEpoch, msg *types.Message) error
+type MsgHandler func(blockMeta *BlockMeta, msg *types.Message) error
 
 // SyncBlocks synchronizes blocks from startEpoch to endEpoch and processes messages using the provided MsgHandler
 func (c *Client) SyncBlocks(startEpoch, endEpoch int64, msgHandler MsgHandler) error {
@@ -72,7 +78,11 @@ func (c *Client) syncBatch(startEpoch, endEpoch int64, msgHandler MsgHandler) er
 						continue
 					}
 
-					if err := msgHandler(abi.ChainEpoch(epoch), msg); err != nil {
+					if err := msgHandler(&BlockMeta{
+						Height:    int64(blkHeader.Height),
+						Cid:       blkHeader.Cid(),
+						Timestamp: int64(blkHeader.Timestamp),
+					}, msg); err != nil {
 						return err
 					}
 
