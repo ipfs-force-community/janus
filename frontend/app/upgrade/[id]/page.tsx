@@ -24,35 +24,62 @@ const categoryColors = {
   Economic: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
 }
 
-const minerCountData = [
-  { date: "2024-01", miners: 2800, active: 2650 },
-  { date: "2024-02", miners: 2950, active: 2780 },
-  { date: "2024-03", miners: 3100, active: 2920 },
-  { date: "2024-04", miners: 3250, active: 3050 },
-  { date: "2024-05", miners: 3400, active: 3180 },
-  { date: "2024-06", miners: 3580, active: 3350 },
-  { date: "2024-07", miners: 3720, active: 3480 },
-  { date: "2024-08", miners: 3850, active: 3600 },
-  { date: "2024-09", miners: 3980, active: 3720 },
-  { date: "2024-10", miners: 4120, active: 3850 },
-  { date: "2024-11", miners: 4250, active: 3970 },
-  { date: "2024-12", miners: 4380, active: 4100 },
-]
-
 const isFip0077 = (fip: any) => {
   const id = (fip?.id || "").toString().toUpperCase().replace(/\s+/g, "")
   return id === "FIP-0077" || id === "FIP0077" || fip?.number === 77
 }
 
-function FIPImpactModal({ fip, isOpen, onClose }: { fip: any; isOpen: boolean; onClose: () => void }) {
-  if (!fip) return null
+interface MinerCountData {
+  date: string;
+  miners: number;
+}
+
+interface FIPImpactModalProps {
+  fip: any;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
+  const [minerData, setMinerData] = useState<MinerCountData[]>([]);
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch data when timeRange changes
+  useEffect(() => {
+    if (!isOpen || !fip) return;
+
+    const fetchMinerData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`/api/miner-count?range=${timeRange}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch miner data');
+        }
+        const data = await response.json();
+        console.log(data);
+        setMinerData(data);
+      } catch (err) {
+        setError('Error fetching data. Please try again.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMinerData();
+  }, [timeRange, isOpen, fip]);
+
+  if (!fip) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Badge className={categoryColors.Storage}>{fip.category || "General"}</Badge>
+            <Badge className={categoryColors.Storage}>{fip.category || 'General'}</Badge>
             {fip.id}: {fip.title}
           </DialogTitle>
           <p className="text-muted-foreground">{fip.description}</p>
@@ -68,87 +95,70 @@ function FIPImpactModal({ fip, isOpen, onClose }: { fip: any; isOpen: boolean; o
               <p className="text-sm text-muted-foreground">
                 Historical and projected changes in Filecoin network miner participation
               </p>
-              <p className="text-xs text-red-500 font-medium mt-1">Mock Data - Real Data Coming Soon</p>
+              <div className="mt-2">
+                <select
+                  value={timeRange}
+                  onChange={(e) => setTimeRange(e.target.value as '7d' | '30d' | '90d')}
+                  className="w-32 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="7d">7 Days</option>
+                  <option value="30d">30 Days</option>
+                  <option value="90d">90 Days</option>
+                </select>
+              </div>
+              {error && (
+                <p className="text-xs text-red-500 font-medium mt-1">{error}</p>
+              )}
             </CardHeader>
             <CardContent>
-              <div className="h-80 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={minerCountData}>
-                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                    <XAxis dataKey="date" tick={{ fontSize: 12 }} tickLine={{ stroke: "#666" }} />
-                    <YAxis
-                      tick={{ fontSize: 12 }}
-                      tickLine={{ stroke: "#666" }}
-                      domain={["dataMin - 100", "dataMax + 100"]}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "hsl(var(--background))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "6px",
-                        fontSize: "12px",
-                      }}
-                      labelFormatter={(label) => `Month: ${label}`}
-                      formatter={(value, name) => [
-                        value.toLocaleString(),
-                        name === "miners" ? "Total Miners" : "Active Miners",
-                      ]}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="miners"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={2}
-                      dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6, stroke: "hsl(var(--primary))", strokeWidth: 2 }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="active"
-                      stroke="hsl(var(--muted-foreground))"
-                      strokeWidth={2}
-                      strokeDasharray="5 5"
-                      dot={{ fill: "hsl(var(--muted-foreground))", strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6, stroke: "hsl(var(--muted-foreground))", strokeWidth: 2 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="flex items-center justify-center gap-6 mt-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-0.5 bg-primary"></div>
-                  <span>Total Miners</span>
+              {loading ? (
+                <div className="h-80 w-full flex items-center justify-center">
+                  <p>Loading...</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-0.5 bg-muted-foreground"
-                    style={{
-                      backgroundImage:
-                        "repeating-linear-gradient(to right, currentColor 0, currentColor 3px, transparent 3px, transparent 8px)",
-                    }}
-                  ></div>
-                  <span>Active Miners</span>
+              ) : (
+                <div className="h-80 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={minerData}>
+                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                      <XAxis dataKey="date" tick={{ fontSize: 12 }} tickLine={{ stroke: '#666' }} />
+                      <YAxis
+                        tick={{ fontSize: 12 }}
+                        tickLine={{ stroke: '#666' }}
+                        domain={['dataMin - 100', 'dataMax + 100']}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--background))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                        }}
+                        labelFormatter={(label) => `Date: ${label}`}
+                        formatter={(value, name) => [
+                          value.toLocaleString(),
+                          name === 'count' ? 'Total Miners' : 'Active Miners',
+                        ]}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="count" // Changed from "miners" to "count"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={2}
+                        dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
+                        activeDot={{ r: 6, stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">4,380</div>
-                  <div className="text-sm text-muted-foreground">Current Total Miners</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">+56%</div>
-                  <div className="text-sm text-muted-foreground">Growth This Year</div>
-                </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
+
 
 const loadUpgrade = async (upgradeId: string) => {
   try {
