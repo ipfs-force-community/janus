@@ -2,7 +2,7 @@
   "id": "FRC-0108",
   "title": "Filecoin Snapshot Format",
   "description": "Defines v2 of the Filecoin snapshot (CAR) format, embedding an F3 finality certificate snapshot to accelerate node bootstrapping and reduce network bandwidth usage.",
-  "showDetailedImpact": true,
+  "showDetailedImpact": false,
   "impacts": {
     "storageProviders": [
       "No direct impact on storage providers’ mining or deal operations, but improved node start-up times may benefit operational reliability and upgrades.",

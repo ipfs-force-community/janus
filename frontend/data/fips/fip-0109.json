@@ -2,7 +2,7 @@
   "id": "FIP-0109",
   "title": "Enable smart contract notifications for Direct Data Onboarding (DDO)",
   "description": "Removes the restriction limiting sector content change notifications to the storage market actor, allowing any actor (e.g., smart contracts) to receive FRC-42 notifications for DDO events, enabling new use cases and integrations.",
-  "showDetailedImpact": true,
+  "showDetailedImpact": false,
   "impacts": {
     "storageProviders": [
       "Storage providers can now specify any actor (not just the market actor) to receive notifications about sector data onboarding, enabling integration with custom marketplaces, DAOs, and DeFi applications.",

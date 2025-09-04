@@ -2,7 +2,7 @@
   "id": "FIP-0085",
   "title": "Convert f090 Mining Reserve actor to a keyless account actor",
   "description": "Convert the FIL mining reserve actor at address f090 from a multisig with individual keyholders to a keyless account actor, ensuring network-governed control and removing individual ownership over reserve funds.",
-  "showDetailedImpact": true,
+  "showDetailedImpact": false,
   "impacts": {
     "storageProviders": [
       "No direct operational impact for storage providers, but strengthens trust in long-term network governance of mining reserve FIL.",

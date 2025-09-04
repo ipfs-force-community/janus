@@ -2,7 +2,7 @@
   "id": "FRC-0102",
   "title": "Wallet-Signing Envelope for Arbitrary Messages",
   "description": "Defines a standardized envelope for signing arbitrary messages with Filecoin and FEVM wallets, using version bytes to distinguish contexts and align with Ethereum standards for improved security and interoperability.",
-  "showDetailedImpact": true,
+  "showDetailedImpact": false,
   "impacts": {
     "storageProviders": [
       "No direct operational impact, but improved wallet and dapp security benefits the whole network ecosystem.",

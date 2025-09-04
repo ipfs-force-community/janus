@@ -2,7 +2,7 @@
   "id": "FIP-0081",
   "title": "Introduce lower bound for sector initial pledge",
   "description": "Refactor the sector initial pledge calculation to establish a non-zero lower bound, ensuring network collateral does not tend to zero even as baseline growth exceeds QAP, and improve consensus security and circulating supply stability.",
-  "showDetailedImpact": true,
+  "showDetailedImpact": false,
   "impacts": {
     "storageProviders": [
       "The initial pledge calculation is split into 'simple' and 'baseline' components, with a ramped activation parameter (gamma) determining their contribution. This introduces a non-zero lower bound for initial pledge requirements.",

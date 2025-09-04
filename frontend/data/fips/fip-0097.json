@@ -2,7 +2,7 @@
   "id": "FIP-0097",
   "title": "Add Support for EIP-1153 (Transient Storage) in the FEVM",
   "description": "Introduce EIP-1153 transient storage to the Filecoin Ethereum Virtual Machine (FEVM), enabling transaction-scoped temporary data storage via new opcodes TLOAD and TSTORE, for improved compatibility and smart contract functionality.",
-  "showDetailedImpact": true,
+  "showDetailedImpact": false,
   "impacts": {
     "storageProviders": [
       "No direct impact on storage providers’ operational routines or economics.",
