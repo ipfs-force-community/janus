@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/filecoin-project/go-state-types/builtin"
 	"github.com/filecoin-project/venus/venus-shared/actors/types"
@@ -23,7 +24,7 @@ func minerAction(ctx context.Context, c *cli.Command) error {
 	client := ctx.Value(contextKey("node_endpoint")).(*chain.Client)
 	db := ctx.Value(contextKey("db")).(*gorm.DB)
 
-	if err := client.SyncBlocks(c.Int64("start_epoch"), c.Int64("end_epoch"), func(blockMeta *chain.BlockMeta, msg *types.Message) error {
+	if err := client.SyncBlocks(c.Int64("start-epoch"), c.Int64("end-epoch"), func(blockMeta *chain.BlockMeta, msg *types.Message) error {
 		if msg.To == builtin.StoragePowerActorAddr && msg.Method == builtin.MethodsPower.CreateMiner {
 			if err := db.Create(&orm.Miner{
 				Height:    blockMeta.Height,
@@ -38,7 +39,7 @@ func minerAction(ctx context.Context, c *cli.Command) error {
 
 		return nil
 	}); err != nil {
-		return err
+		slog.Error("SyncBlocks error", "error", err)
 	}
 
 	return nil

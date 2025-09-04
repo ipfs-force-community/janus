@@ -26,18 +26,23 @@ func main() {
 				Value:   "config.yaml",
 			},
 			&cli.StringFlag{
-				Name:    "node_endpoint",
+				Name:    "node-endpoint",
 				Aliases: []string{"n"},
 				Usage:   "Filecoin node endpoint",
 				Value:   "http://127.0.0.1:3463",
 			},
-			&cli.Int64Flag{
-				Name:  "start_epoch",
-				Usage: "Start epoch to sync from",
-				Value: 4578563,
+			&cli.StringFlag{
+				Name:     "node-token",
+				Usage:    "Filecoin node endpoint token",
+				Required: true,
 			},
 			&cli.Int64Flag{
-				Name:  "end_epoch",
+				Name:  "start-epoch",
+				Usage: "Start epoch to sync from",
+				Value: 5260000,
+			},
+			&cli.Int64Flag{
+				Name:  "end-epoch",
 				Usage: "End epoch to sync to, 0 means sync to the latest",
 				Value: 0,
 			},
@@ -61,7 +66,7 @@ func main() {
 
 			ctx = context.WithValue(ctx, contextKey("db"), db)
 
-			client, err := chain.NewClient(ctx, c.String("node_endpoint"), "")
+			client, err := chain.NewClient(ctx, c.String("node-endpoint"), c.String("node-token"))
 			if err != nil {
 				return ctx, err
 			}

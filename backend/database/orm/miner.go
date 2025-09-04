@@ -2,6 +2,7 @@ package orm
 
 import "gorm.io/gorm"
 
+// Miner represents table miner in the database
 type Miner struct {
 	gorm.Model
 	Height    int64  `gorm:"not null"`

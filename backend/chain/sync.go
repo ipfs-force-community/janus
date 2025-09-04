@@ -13,6 +13,7 @@ import (
 
 const batchBlockNum = 1000
 
+// BlockMeta contains base info about a block
 type BlockMeta struct {
 	Height    int64
 	Cid       cid.Cid
