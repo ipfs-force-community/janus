@@ -42,7 +42,7 @@ interface FIPImpactModalProps {
 
 function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
   const [minerData, setMinerData] = useState<MinerCountData[]>([]);
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const [timeRange, setTimeRange] = useState<'7d' | '30d'>('30d');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -98,12 +98,11 @@ function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
               <div className="mt-2">
                 <select
                   value={timeRange}
-                  onChange={(e) => setTimeRange(e.target.value as '7d' | '30d' | '90d')}
+                  onChange={(e) => setTimeRange(e.target.value as '7d' | '30d')}
                   className="w-32 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="7d">7 Days</option>
                   <option value="30d">30 Days</option>
-                  <option value="90d">90 Days</option>
                 </select>
               </div>
               {error && (
@@ -120,11 +119,18 @@ function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={minerData}>
                       <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                      <XAxis dataKey="date" tick={{ fontSize: 12 }} tickLine={{ stroke: '#666' }} />
+                      <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 12 }}
+                        tickLine={{ stroke: "#666" }}
+                      />
                       <YAxis
                         tick={{ fontSize: 12 }}
-                        tickLine={{ stroke: '#666' }}
-                        domain={['dataMin - 100', 'dataMax + 100']}
+                        tickLine={{ stroke: "#666" }}
+                        domain={[
+                          (dataMin: number) => Math.max(0, dataMin - 5),
+                          (dataMax: number) => dataMax + 5,
+                        ]}
                       />
                       <Tooltip
                         contentStyle={{
@@ -141,7 +147,7 @@ function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
                       />
                       <Line
                         type="monotone"
-                        dataKey="count" // Changed from "miners" to "count"
+                        dataKey="count"
                         stroke="hsl(var(--primary))"
                         strokeWidth={2}
                         dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
