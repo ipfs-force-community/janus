@@ -8,6 +8,7 @@ BIN_DIR := $(BACKEND_DIR)/bin
 # Backend binaries
 API_BIN := $(BIN_DIR)/api
 JANUS_BIN := $(BIN_DIR)/janus
+INDEXER_BIN := $(BIN_DIR)/indexer
 
 .PHONY: all backend frontend clean
 
@@ -17,7 +18,7 @@ all: backend frontend
 # -------------------
 # Backend build rules
 # -------------------
-backend: $(API_BIN) $(JANUS_BIN)
+backend: $(API_BIN) $(JANUS_BIN) $(INDEXER_BIN)
 
 $(API_BIN): $(BACKEND_DIR)/cmd/api/main.go
 	@echo "Building backend API..."
@@ -29,6 +30,10 @@ $(JANUS_BIN): $(wildcard $(BACKEND_DIR)/cmd/janus/*.go)
 	@mkdir -p $(BIN_DIR)
 	cd $(BACKEND_DIR) && go build -o bin/janus ./cmd/janus/*.go
 
+$(INDEXER_BIN): $(wildcard $(BACKEND_DIR)/cmd/indexer/*.go)
+	@echo "Building backend Indexer..."
+	@mkdir -p $(BIN_DIR)
+	cd $(BACKEND_DIR) && go build -o bin/indexer ./cmd/indexer/*.go
 # -------------------
 # Frontend build rules
 # -------------------
