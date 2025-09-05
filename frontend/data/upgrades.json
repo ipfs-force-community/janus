@@ -1,5 +1,9 @@
 {
-  "upgradeIds": ["mercury", "teep", "tuk-tuk"],
+  "upgradeIds": [
+    "golden-week-upgrade",
+    "teep",
+    "tuk-tuk"
+  ],
   "metadata": {
     "lastUpdated": "2024-12-15T10:00:00Z",
     "version": "1.0.0",

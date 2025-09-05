@@ -1,0 +1,25 @@
+{
+  "id": "FIP-0105",
+  "title": "BLS12-381 Precompiles for FEVM (EIP-2537)",
+  "description": "Introduce precompiled contracts in the FEVM for efficient cryptographic operations on the BLS12-381 elliptic curve, enabling fast BLS signature verification, aggregation, and pairing checks, and aligning with EIP-2537 for cross-chain and advanced cryptographic use cases.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "Enables advanced cryptographic primitives such as aggregate signature validation and threshold proofs for storage proofs and consensus, improving efficiency and enabling new protocol features.",
+      "Facilitates the implementation of scalable zk-rollup or aggregate proof systems, potentially reducing on-chain data requirements for large storage provider operations."
+    ],
+    "clients": [
+      "Improves security and scalability of client-facing applications by allowing efficient BLS signature verification and zk-proof aggregation.",
+      "Enables new client features (e.g., batch verification, privacy-preserving proofs) that leverage BLS12-381 cryptography, with no breaking changes to existing client logic."
+    ],
+    "tokenHolders": [
+      "Strengthens network security through support for advanced cryptographic protocols, reducing risk of signature forgery and improving verifiability of on-chain actions.",
+      "May increase token holder confidence in Filecoin’s ability to support modern cryptographic applications, potentially enhancing token utility and ecosystem value."
+    ],
+    "applicationDevelopers": [
+      "Enables direct use of BLS12-381 precompiles for efficient cryptographic operations within smart contracts, eliminating the need for expensive or insecure userland implementations.",
+      "Supports development of new dApps (e.g., decentralized voting, threshold cryptography, privacy solutions) that require BLS-based primitives.",
+      "No breaking changes for existing contracts, but developers can now migrate to precompiles for substantial gas and performance benefits when using BLS signatures."
+    ]
+  }
+}

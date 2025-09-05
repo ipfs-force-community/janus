@@ -259,7 +259,7 @@ export default function FilecoinUpgrades() {
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <Input
-            placeholder="Search by name or version (e.g., Dragon, nv28)..."
+            placeholder="Search by name or version (e.g., Teep, nv25)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="md:flex-1"

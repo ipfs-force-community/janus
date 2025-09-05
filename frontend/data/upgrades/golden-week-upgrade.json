@@ -1,6 +1,6 @@
 {
-    "id": "mercury",
-    "name": "Mercury",
+    "id": "Golden Week Upgrade",
+    "name": "Golden Week pgrade",
     "networkVersion": "nv27",
     "chain": "Mainnet",
     "epochTarget": 5348280,
@@ -9,7 +9,7 @@
     "releaseTag": "lotus v1.34.0",
     "specs": [
         "FIP-0077",
-        "FRC-0102",
+        "FIP-0105",
         "FIP-0103",
         "FIP-0106",
         "FIP-0101",
@@ -18,13 +18,12 @@
     ],
     "links": {
         "releaseNotes": "https://github.com/filecoin-project/lotus/releases/tag/v1.34.0",
-        "blog": "https://filecoin.io/blog/dragon-upgrade",
         "discussion": "https://github.com/filecoin-project/FIPs/discussions/881"
     },
     "notes": "Protocol cleanup and enhancement introducing FEVM cryptographic precompiles, F3 snapshot support, smart contract notifications, and a 5 FIL miner creation deposit while removing deprecated methods.",
     "fipIds": [
         "fip-0077",
-        "frc-0102",
+        "fip-0105",
         "fip-0103",
         "fip-0106",
         "fip-0101",

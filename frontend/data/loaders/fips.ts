@@ -1,5 +1,5 @@
 import fip0077 from "@/data/fips/fip-0077.json"
-import frc0102 from "@/data/fips/frc-0102.json"
+import fip0105 from "@/data/fips/fip-0105.json"
 import fip0103 from "@/data/fips/fip-0103.json"
 import fip0106 from "@/data/fips/fip-0106.json"
 import fip0101 from "@/data/fips/fip-0101.json"
@@ -11,7 +11,7 @@ import fip0085 from "@/data/fips/fip-0085.json"
 
 export const fipLoaders = {
   "fip-0077": fip0077,
-  "frc-0102": frc0102,
+  "fip-0105": fip0105,
   "fip-0103": fip0103,
   "fip-0106": fip0106,
   "fip-0101": fip0101,
