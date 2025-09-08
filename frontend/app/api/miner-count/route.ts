@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const range = searchParams.get('range') || '30d';
+  const range = searchParams.get('range') || '7d';
 
   try {
     const res = await fetch(`http://127.0.0.1:10086/miners?interval=${range}`, {

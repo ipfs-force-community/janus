@@ -42,7 +42,7 @@ interface FIPImpactModalProps {
 
 function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
   const [minerData, setMinerData] = useState<MinerCountData[]>([]);
-  const [timeRange, setTimeRange] = useState<'7d' | '30d'>('30d');
+  const [timeRange, setTimeRange] = useState<'7d' | '30d'>('7d');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
