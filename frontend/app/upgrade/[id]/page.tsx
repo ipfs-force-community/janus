@@ -31,7 +31,7 @@ const isFip0077 = (fip: any) => {
 
 interface MinerCountData {
   date: string;
-  miners: number;
+  count: number;
 }
 
 interface FIPImpactModalProps {
@@ -148,10 +148,10 @@ function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
                       <Line
                         type="monotone"
                         dataKey="count"
-                        stroke="hsl(var(--primary))"
+                        stroke="#8884d8"
                         strokeWidth={2}
-                        dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
-                        activeDot={{ r: 6, stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
+                        dot={{ fill: '#8884d8', stroke: '#8884d8', strokeWidth: 2, r: 4 }}
+                        activeDot={{ r: 6, stroke: '#8884d8', strokeWidth: 2 }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
