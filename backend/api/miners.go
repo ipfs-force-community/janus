@@ -31,18 +31,36 @@ func (s *Server) GetDailyMinerStats(c *gin.Context) {
 		}
 	}
 
-	end := time.Now().Unix()
-	start := time.Now().AddDate(0, 0, -days).Unix()
+	endTime := time.Now()
+	startTime := endTime.AddDate(0, 0, -days)
 
-	var results []DailyMinerStat
+	end := endTime.Unix()
+	start := startTime.Unix()
+
+	var dbResults []DailyMinerStat
 	if err := s.db.Model(&orm.Miner{}).
 		Select("DATE_FORMAT(FROM_UNIXTIME(timestamp), '%Y-%m-%d') AS date, COUNT(*) AS count").
 		Where("timestamp BETWEEN ? AND ?", start, end).
 		Group("date").
 		Order("date").
-		Scan(&results).Error; err != nil {
+		Scan(&dbResults).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
+	}
+
+	resultMap := make(map[string]int64, len(dbResults))
+	for _, r := range dbResults {
+		resultMap[r.Date] = r.Count
+	}
+
+	var results []DailyMinerStat
+	for d := 0; d <= days; d++ {
+		date := startTime.AddDate(0, 0, d).Format("2006-01-02")
+		count := resultMap[date]
+		results = append(results, DailyMinerStat{
+			Date:  date,
+			Count: count,
+		})
 	}
 
 	if results == nil {
