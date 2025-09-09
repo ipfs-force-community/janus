@@ -1,0 +1,27 @@
+{
+  "id": "FIP-0086",
+  "title": "Fast Finality in Filecoin (F3)",
+  "description": "This FIP introduces the F3 protocol to provide fast, deterministic finality in Filecoin by augmenting Expected Consensus (EC) with a fast finality gadget (GossiPBFT). F3 allows tipsets to be finalized in tens of seconds, improving latency for clients, exchanges, and cross-chain applications.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "Eligible storage providers participate in F3 consensus, signing finality certificates proportional to their quality-adjusted power.",
+      "Participation in F3 entails modest additional computation (verifying and signing messages per round), but ensures their blocks can be finalized quickly.",
+      "Operational routines generally unchanged; incentives are maintained, but active and honest participation is required for network liveness."
+    ],
+    "clients": [
+      "Clients and applications can safely treat transactions as final within tens of seconds, instead of waiting for hundreds of epochs.",
+      "Significantly improves user experience for latency-sensitive applications, including exchanges and cross-chain bridges.",
+      "Simplifies client implementations by providing deterministic, verifiable finality certificates."
+    ],
+    "tokenHolders": [
+      "Enhances Filecoin’s competitiveness and utility for DeFi, bridging, and other applications requiring fast settlement.",
+      "No direct change to FIL supply, governance, or economic parameters, but broader ecosystem usage and demand may increase."
+    ],
+    "applicationDevelopers": [
+      "Enables new use-cases for Filecoin that require rapid and safe finality, such as cross-chain messaging, fast bridges, and FVM/IPC integrations.",
+      "Provides verifiable finality certificates that can be validated by light clients and smart contracts, facilitating trust-minimized off-chain and cross-chain integrations.",
+      "Requires protocol-awareness for applications that wish to rely on F3 finality, but legacy applications remain compatible with probabilistic finality if desired."
+    ]
+  }
+}

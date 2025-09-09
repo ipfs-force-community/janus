@@ -1,0 +1,28 @@
+{
+  "id": "FIP-0100",
+  "title": "Removing Batch Balancer, Replacing It With a Per-sector Fee and Removing Gas-limited Constraints",
+  "description": "This FIP removes the batch balancer fee from PreCommit and ProveCommit operations, introduces a new daily per-sector fee based on quality-adjusted power and circulating supply, and eliminates protocol constraints on batch size. The changes aim to simplify onboarding, align network value accrual with protocol economics, and enhance Filecoin's scalability and efficiency.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "Batch balancer fee removal lowers onboarding gas costs and encourages batching and aggregation, reducing operational costs.",
+      "New per-sector daily fee, proportional to sector QAP and circulating supply, provides a predictable cost model and aligns incentives with ongoing network value accrual.",
+      "Removal of protocol batch-size constraints simplifies operations and allows greater flexibility, with gas limit as the sole restriction.",
+      "A 90-day grace period applies for extensions of old sectors after activation; after this, extending or updating old sectors may incur daily fees."
+    ],
+    "clients": [
+      "Network can support faster, more predictable onboarding and sector upgrades, potentially leading to increased storage capacity and improved network reliability.",
+      "Decoupling of gas and service fees results in more stable service costs, benefiting long-term storage clients and applications."
+    ],
+    "tokenHolders": [
+      "Protocol economics are stabilized via an explicit per-sector fee that scales with network growth and demand.",
+      "No direct change to FIL supply or tokenomics, but improved network alignment and value capture may promote FIL utility and demand."
+    ],
+    "applicationDevelopers": [
+      "Clearer, simpler cost and protocol models for onboarding and operating storage, facilitating integration into DeFi, SaaS, and automation tooling.",
+      "Upgrades to sector state and vesting-funds structures may affect integrations that rely on miner state; changes are backward-incompatible and require protocol-version awareness.",
+      "Opportunities for new optimizations and automation as batch size constraints are removed and gas is the only execution limit.",
+      "Requires updates to integration logic for sector commitment, extension, and monitoring of per-sector fees."
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "FIP-0098",
+  "title": "Simplify termination fee calculation to a fixed percentage of initial pledge",
+  "description": "This FIP proposes simplifying Filecoin sector termination fee calculation by making it a fixed percentage of the initial pledge, subject to clear bounds and age adjustment, replacing the current complex formula. This change aims to improve performance, predictability, and economic security for DeFi and FEVM applications leveraging miner actors.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "Termination penalty calculation becomes transparent, predictable, and easy to estimate, reducing operational complexity and risk.",
+      "Reduces the need for sophisticated accounting or modeling to forecast termination fees, enhancing planning and risk management.",
+      "For sectors older than 140 days, immediate reduction in penalty to match new steady-state rate; younger sectors maintain a linear ramp-up.",
+      "Overall incentives and network security principles are maintained, but some older sectors may face reduced penalties."
+    ],
+    "clients": [
+      "Improves network stability and reliability by maintaining strong incentives against abrupt off-boarding of storage power.",
+      "Clients gain clearer insight into collateral risks for storage-backed DeFi applications, improving trust and UX."
+    ],
+    "tokenHolders": [
+      "Simplifies Filecoin’s economic model, making the network more attractive to new users, DeFi protocols, and external integrations.",
+      "No change to FIL supply or direct token economics, but may increase network utility and demand for FIL through ecosystem growth and improved DeFi composability."
+    ],
+    "applicationDevelopers": [
+      "DeFi, lending, and leasing protocols can confidently compute maximum termination penalties, enabling new use-cases for miner actors as collateral.",
+      "Built-in actor methods for termination fee, miner power, and pledge are directly accessible from FEVM, facilitating integration and automation.",
+      "Redundant sector state fields can be removed in the future, simplifying code and state migration.",
+      "Requires updates to protocol integration (e.g., precompiles or FEVM calls), but contract logic is simplified and made more robust."
+    ]
+  }
+}
