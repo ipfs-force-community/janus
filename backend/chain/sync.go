@@ -58,36 +58,44 @@ func (c *Client) SyncBlocks(startEpoch, endEpoch int64, msgHandler MsgHandler) e
 	return c.syncBatch(startEpoch, endEpoch, msgHandler)
 }
 
-func (c *Client) syncBatch(startEpoch, endEpoch int64, msgHandler MsgHandler) error {
+func (c *Client) syncBatch(startEpoch, endEpoch int64, handler MsgHandler) error {
 	g, ctx := errgroup.WithContext(c.ctx)
 	for epoch := startEpoch; epoch < endEpoch; epoch++ {
 		g.Go(func() error {
-			msgHandle := make(map[cid.Cid]struct{})
 			tipset, err := c.ChainGetTipSetByHeight(ctx, abi.ChainEpoch(epoch), types.TipSetKey{})
 			if err != nil {
 				return fmt.Errorf("failed to get tipset at epoch %d: %w", epoch, err)
 			}
 
-			for _, blkHeader := range tipset.Blocks() {
-				messages, err := c.ChainGetBlockMessages(ctx, blkHeader.Cid())
+			seen := make(map[cid.Cid]struct{})
+			for _, blk := range tipset.Blocks() {
+				msgs, err := c.ChainGetBlockMessages(ctx, blk.Cid())
 				if err != nil {
-					return fmt.Errorf("failed to get block messages for block %s: %w", blkHeader.Cid(), err)
+					return fmt.Errorf("get messages for block %s: %w", blk.Cid(), err)
 				}
 
-				for _, msg := range messages.BlsMessages {
-					if _, exists := msgHandle[msg.Cid()]; exists {
-						continue
+				process := func(cmsg cid.Cid, m *types.Message) error {
+					if _, ok := seen[cmsg]; ok {
+						return nil
 					}
 
-					if err := msgHandler(&BlockMeta{
-						Height:    int64(blkHeader.Height),
-						Cid:       blkHeader.Cid(),
-						Timestamp: int64(blkHeader.Timestamp),
-					}, msg); err != nil {
+					seen[cmsg] = struct{}{}
+					return handler(&BlockMeta{
+						Height:    int64(blk.Height),
+						Cid:       blk.Cid(),
+						Timestamp: int64(blk.Timestamp),
+					}, m)
+				}
+
+				for _, m := range msgs.BlsMessages {
+					if err := process(m.Cid(), m); err != nil {
 						return err
 					}
-
-					msgHandle[msg.Cid()] = struct{}{}
+				}
+				for _, sm := range msgs.SecpkMessages {
+					if err := process(sm.Cid(), &sm.Message); err != nil {
+						return err
+					}
 				}
 			}
 			return nil
