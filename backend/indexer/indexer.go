@@ -12,7 +12,10 @@ import (
 	"github.com/ipfs-force-community/janus/database/orm"
 )
 
-const minFetchHeight = 5200000
+const (
+	minFetchHeight = 5200000
+	safeConfirmNum = 20
+)
 
 type Indexer struct {
 	ctx         context.Context
@@ -61,6 +64,8 @@ func (i *Indexer) sync() error {
 		return err
 	}
 
+	// only sync up to headHeight - safeConfirmNum to avoid chain reorg issues
+	headHeight -= safeConfirmNum
 	if latestHeight >= headHeight {
 		return nil
 	}
