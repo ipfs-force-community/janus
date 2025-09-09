@@ -1,0 +1,25 @@
+{
+  "id": "FIP-0095",
+  "title": "Add FEVM precompile to fetch beacon digest from chain history",
+  "description": "This FIP introduces a precompile to the FEVM allowing smart contracts to fetch drand beacon digests from Filecoin chain history, enabling access to unbiased randomness from prior epochs for advanced proofs and protocols.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "No direct operational or economic impact for storage providers.",
+      "Indirectly supports a richer ecosystem by enabling new smart contract protocols that may drive increased demand and use of Filecoin storage."
+    ],
+    "clients": [
+      "Clients interacting with FEVM can now access unbiased randomness from previous epochs, supporting advanced applications such as proof-of-data-possession.",
+      "Improves protocol flexibility and supports use-cases that require committed randomness challenges from earlier epochs."
+    ],
+    "tokenHolders": [
+      "No direct change to FIL supply, governance, or economics.",
+      "By making Filecoin a more capable platform for proofs and off-chain protocols, may indirectly increase FIL utility and ecosystem activity."
+    ],
+    "applicationDevelopers": [
+      "Developers can now build smart contracts requiring unbiased, historical randomness, such as robust proofs-of-service or interactive protocols.",
+      "Gas costs scale with depth of lookback, incentivizing efficient protocol design.",
+      "New precompile is Filecoin-specific; portability to other EVM chains is limited, but enables unique capabilities in FEVM."
+    ]
+  }
+}

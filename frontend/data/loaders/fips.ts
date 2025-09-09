@@ -1,5 +1,5 @@
+// nv27
 import fip0077 from "@/data/fips/fip-0077.json"
-import fip0081 from "@/data/fips/fip-0081.json"
 import fip0085 from "@/data/fips/fip-0085.json"
 import fip0101 from "@/data/fips/fip-0101.json"
 import fip0103 from "@/data/fips/fip-0103.json"
@@ -15,6 +15,11 @@ import fip0097 from "@/data/fips/fip-0097.json"
 import fip0098 from "@/data/fips/fip-0098.json"
 import fip0100 from "@/data/fips/fip-0100.json"
 
+// nv24
+import fip0081 from "@/data/fips/fip-0081.json"
+import fip0094 from "@/data/fips/fip-0094.json"
+import fip0095 from "@/data/fips/fip-0095.json"
+
 export const fipLoaders = {
   "fip-0077": fip0077,
   "fip-0105": fip0105,
@@ -29,6 +34,8 @@ export const fipLoaders = {
   "fip-0086":fip0086,
   "fip-0098": fip0098,
   "fip-0100": fip0100,
+  "fip-0094": fip0094,
+  "fip-0095": fip0095,
 }
 
 export const getFIP = (id: string) => {

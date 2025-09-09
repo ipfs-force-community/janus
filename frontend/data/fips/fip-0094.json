@@ -1,0 +1,25 @@
+{
+  "id": "FIP-0094",
+  "title": "Add Support for EIP-5656 (MCOPY Opcode) in the FEVM",
+  "description": "This FIP adds the EIP-5656 MCOPY opcode to the Filecoin Ethereum Virtual Machine (FEVM), enabling efficient memory copying for smart contracts. This change improves compatibility with the latest Solidity versions and enhances contract performance.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "No direct operational or economic impact.",
+      "Indirect improvement to network utility by enabling more advanced and compatible smart contracts, which can drive ecosystem growth."
+    ],
+    "clients": [
+      "Clients interacting with FEVM contracts benefit from improved contract performance and compatibility with Ethereum tooling.",
+      "Supports deployment of contracts compiled with newer Solidity versions, improving client experience and reliability."
+    ],
+    "tokenHolders": [
+      "Improves FEVM’s compatibility with Ethereum, potentially attracting more projects and users to Filecoin, which may increase FIL utility and demand.",
+      "No change to token supply, governance, or direct economics, but may benefit token holders via ecosystem growth."
+    ],
+    "applicationDevelopers": [
+      "Developers can use the MCOPY opcode (Solidity >=0.8.25) for efficient memory copying, unlocking new language features and optimizations.",
+      "No breaking changes—existing contracts remain unaffected unless they require MCOPY.",
+      "Minor updates to tooling may be needed to leverage MCOPY; legacy code remains fully compatible."
+    ]
+  }
+}
