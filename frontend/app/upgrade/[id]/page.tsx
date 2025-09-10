@@ -286,29 +286,6 @@ export default function UpgradeDetails() {
         </div>
       </header>
 
-      <div className="border-b bg-muted/20">
-        <div className="container mx-auto px-4 py-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div>
-              <div className="text-2xl font-bold text-muted-foreground">0</div>
-              <div className="text-sm text-muted-foreground">Activated</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-muted-foreground">0</div>
-              <div className="text-sm text-muted-foreground">Scheduled</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold">{safeUpgrade.fips.length}</div>
-              <div className="text-sm text-muted-foreground">FIPs</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-muted-foreground">0</div>
-              <div className="text-sm text-muted-foreground">Declined or Postponed</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <main className="container mx-auto px-4 py-8">
         <div className="flex gap-8">
           <div className="w-64 flex-shrink-0">
