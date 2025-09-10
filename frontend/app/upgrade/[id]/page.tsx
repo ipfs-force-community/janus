@@ -258,7 +258,7 @@ export default function UpgradeDetails() {
     ...upgrade,
     status: upgrade.status || fallbacks.defaultStatus,
     notes: upgrade.notes || fallbacks.defaultNotes,
-    releaseTag: upgrade.releaseTag || fallbacks.defaultReleaseTag,
+    releaseTag: upgrade.lotusReleaseTag || fallbacks.defaultReleaseTag,
     specs: upgrade.specs || fallbacks.emptySpecs,
     fips: fips,
   }

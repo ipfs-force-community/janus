@@ -25,9 +25,11 @@ type Upgrade = {
   epochTarget: number
   timeTarget: string
   status: string
-  releaseTag: string
+  lotusReleaseTag: string
+  lotusReleaseUrl: string
+  venusReleaseTag: string
+  venusReleaseUrl: string
   specs: string[]
-  links: Record<string, string>
   notes: string
   fipIds: string[]
 }
@@ -83,9 +85,11 @@ function UpgradeCard({ upgrade, upgradeId }: { upgrade: Upgrade; upgradeId: stri
     status: upgrade.status || fallbacks.defaultStatus,
     chain: upgrade.chain || fallbacks.defaultChain,
     notes: upgrade.notes || fallbacks.defaultNotes,
-    releaseTag: upgrade.releaseTag || fallbacks.defaultReleaseTag,
+    lotusReleaseTag: upgrade.lotusReleaseTag || fallbacks.defaultReleaseTag,
+    lotusReleaseUrl: upgrade.lotusReleaseUrl || fallbacks.defaultReleaseUrl,
+    venusReleaseTag: upgrade.venusReleaseTag || fallbacks.defaultReleaseTag,
+    venusReleaseUrl: upgrade.venusReleaseUrl || fallbacks.defaultReleaseUrl,
     specs: upgrade.specs || fallbacks.emptySpecs,
-    links: upgrade.links || fallbacks.emptyLinks,
   }
 
   return (
@@ -148,12 +152,32 @@ function UpgradeCard({ upgrade, upgradeId }: { upgrade: Upgrade; upgradeId: stri
             {safeUpgrade.status === "Upcoming" && safeUpgrade.timeTarget && (
               <CountdownTimer targetTime={safeUpgrade.timeTarget} />
             )}
-
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">Release Tag</p>
-              <div className="flex items-center gap-2">
-                <GitBranch className="h-4 w-4" />
-                <code className="bg-muted px-2 py-1 rounded text-sm">{safeUpgrade.releaseTag}</code>
+              <p className="text-sm font-medium text-muted-foreground mb-2">Release Tags</p>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <GitBranch className="h-4 w-4" />
+                  <a
+                    href={safeUpgrade.lotusReleaseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-muted px-2 py-1 rounded text-sm hover:underline cursor-pointer"
+                  >
+                    {safeUpgrade.lotusReleaseTag}
+                  </a>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <GitBranch className="h-4 w-4" />
+                  <a
+                    href={safeUpgrade.venusReleaseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-muted px-2 py-1 rounded text-sm hover:underline cursor-pointer"
+                  >
+                    {safeUpgrade.venusReleaseTag}
+                  </a>
+                </div>
               </div>
             </div>
 

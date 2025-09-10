@@ -6,17 +6,15 @@
   "epochTarget": 4461240,
   "timeTarget": "2024-11-20T23:00:00Z",
   "status": "Finalized",
-  "releaseTag": "lotus v1.30.0",
+  "lotusReleaseTag": "lotus v1.30.0",
+  "lotusReleaseUrl": "https://github.com/filecoin-project/lotus/releases/tag/v1.30.0",
+  "venusReleaseTag": "venus v1.17.0",
+  "venusReleaseUrl": "https://github.com/filecoin-project/venus/releases/tag/v1.17.0",
   "specs": [
     "FIP-0081",
     "FIP-0094",
     "FIP-0095"
   ],
-  "links": {
-    "releaseNotes": "https://github.com/filecoin-project/lotus/releases/tag/v1.30.0",
-    "blog": "https://filecoin.io/blog/phoenix-upgrade",
-    "discussion": "https://github.com/filecoin-project/FIPs/discussions/884"
-  },
   "notes": "Major protocol improvements with enhanced security features. Currently being tested on Calibration network.",
   "fipIds": [
     "fip-0081",

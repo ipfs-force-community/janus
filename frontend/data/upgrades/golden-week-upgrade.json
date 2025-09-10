@@ -6,7 +6,10 @@
     "epochTarget": 5348280,
     "timeTarget": "2025-09-24T23:00:00Z",
     "status": "Upcoming",
-    "releaseTag": "lotus v1.34.0",
+    "lotusReleaseTag": "lotus v1.34.0-rc2",
+    "lotusReleaseUrl": "https://github.com/filecoin-project/lotus/releases/tag/v1.34.0-rc2",
+    "venusReleaseTag": "venus v1.19.0-rc1",
+    "venusReleaseUrl": "https://github.com/filecoin-project/venus/releases/tag/v1.19.0-rc1",
     "specs": [
         "FIP-0077",
         "FIP-0105",
@@ -16,10 +19,6 @@
         "FRC-0108",
         "FIP-0109"
     ],
-    "links": {
-        "releaseNotes": "https://github.com/filecoin-project/lotus/releases/tag/v1.34.0",
-        "discussion": "https://github.com/filecoin-project/FIPs/discussions/881"
-    },
     "notes": "Protocol cleanup and enhancement introducing FEVM cryptographic precompiles, F3 snapshot support, smart contract notifications, and a 5 FIL miner creation deposit while removing deprecated methods.",
     "fipIds": [
         "fip-0077",

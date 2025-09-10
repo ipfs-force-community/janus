@@ -6,18 +6,16 @@
     "epochTarget": 4878840,
     "timeTarget": "2025-04-14T23:00:00Z",
     "status": "Finalized",
-    "releaseTag": "lotus v1.32.2",
+    "lotusReleaseTag": "lotus v1.32.2",
+    "lotusReleaseUrl": "https://github.com/filecoin-project/lotus/releases/tag/v1.32.2",
+    "venusReleaseTag": "venus v1.18.1",
+    "venusReleaseUrl": "https://github.com/filecoin-project/venus/releases/tag/v1.18.1",
     "specs": [
         "FIP-0097",
         "FIP-0098",
         "FIP-0100",
         "FIP-0086"
     ],
-    "links": {
-        "releaseNotes": "https://github.com/filecoin-project/lotus/releases/tag/v1.32.2",
-        "blog": "https://filecoin.io/blog/skyrise-upgrade",
-        "discussion": "https://github.com/filecoin-project/FIPs/discussions/878"
-    },
     "notes": "Enhanced consensus mechanisms and improved network stability.",
     "fipIds": [
         "fip-0097",
