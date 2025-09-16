@@ -19,13 +19,16 @@
         "FRC-0108",
         "FIP-0109"
     ],
+    "importantFips": [
+        "fip-0077"
+    ],
     "notes": "Protocol cleanup and enhancement introducing FEVM cryptographic precompiles, F3 snapshot support, smart contract notifications, and a 5 FIL miner creation deposit while removing deprecated methods.",
     "fipIds": [
         "fip-0077",
-        "fip-0105",
-        "fip-0103",
-        "fip-0106",
         "fip-0101",
+        "fip-0103",
+        "fip-0105",
+        "fip-0106",
         "frc-0108",
         "fip-0109"
     ]

@@ -24,9 +24,19 @@ const categoryColors = {
   Economic: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
 }
 
-const isFip0077 = (fip: any) => {
-  const id = (fip?.id || "").toString().toUpperCase().replace(/\s+/g, "")
-  return id === "FIP-0077" || id === "FIP0077" || fip?.number === 77
+const isImportantFip = (fip: any, importantFips: string[]) => {
+  if (!fip) return false
+
+  const id = (fip?.id || fip?.toString() || "")
+    .toUpperCase()
+    .replace(/\s+/g, "")
+
+  const num = fip?.number ? `FIP-${fip.number}` : null
+
+  return (
+    importantFips.map(f => f.toUpperCase().replace(/\s+/g, "")).includes(id) ||
+    (num && importantFips.map(f => f.toUpperCase()).includes(num))
+  )
 }
 
 interface MinerCountData {
@@ -260,6 +270,7 @@ export default function UpgradeDetails() {
     notes: upgrade.notes || fallbacks.defaultNotes,
     lotusReleaseTag: upgrade.lotusReleaseTag || fallbacks.defaultReleaseTag,
     venusReleaseTag: upgrade.venusReleaseTag || fallbacks.defaultReleaseTag,
+    importantFips: upgrade.importantFips || [],
     specs: upgrade.specs || fallbacks.emptySpecs,
     fips: fips,
   }
@@ -311,7 +322,7 @@ export default function UpgradeDetails() {
                     title={fip.title}
                   >
                     <span className="flex items-center gap-2 min-w-0">
-                      {isFip0077(fip) && (
+                      {isImportantFip(fip, safeUpgrade.importantFips) && (
                         <Star className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" aria-label="Important FIP" />
                       )}
                       <span className="flex-shrink-0">{fip.id}: </span>
@@ -386,7 +397,7 @@ export default function UpgradeDetails() {
                             <Badge variant="outline" className="font-mono">
                               {fip.id}
                             </Badge>
-                            {isFip0077(fip) && <Star className="h-4 w-4 text-amber-500" aria-label="Important FIP" />}
+                            {isImportantFip(fip, safeUpgrade.importantFips) && <Star className="h-4 w-4 text-amber-500" aria-label="Important FIP" />}
                             {fip.category && (
                               <Badge
                                 className={

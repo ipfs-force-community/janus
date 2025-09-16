@@ -11,16 +11,20 @@
     "venusReleaseTag": "venus v1.18.1",
     "venusReleaseUrl": "https://github.com/filecoin-project/venus/releases/tag/v1.18.1",
     "specs": [
-        "FIP-0097",
-        "FIP-0098",
+        "FIP-0086",
         "FIP-0100",
-        "FIP-0086"
+        "FIP-0097",
+        "FIP-0098"
+    ],
+    "importantFips": [
+        "fip-0086",
+        "fip-0100"
     ],
     "notes": "Enhanced consensus mechanisms and improved network stability.",
     "fipIds": [
-        "fip-0097",
-        "fip-0098",
+        "fip-0086",
         "fip-0100",
-        "fip-0086"
+        "fip-0097",
+        "fip-0098"
     ]
 }

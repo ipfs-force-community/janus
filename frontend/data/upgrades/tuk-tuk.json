@@ -15,6 +15,9 @@
     "FIP-0094",
     "FIP-0095"
   ],
+  "importantFips": [
+    "fip-0081"
+  ],
   "notes": "Major protocol improvements with enhanced security features. Currently being tested on Calibration network.",
   "fipIds": [
     "fip-0081",
