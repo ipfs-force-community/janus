@@ -60,7 +60,7 @@ func (c *Client) SyncBlocks(startEpoch, endEpoch int64, msgHandler MsgHandler) e
 
 func (c *Client) syncBatch(startEpoch, endEpoch int64, handler MsgHandler) error {
 	g, ctx := errgroup.WithContext(c.ctx)
-	for epoch := startEpoch; epoch < endEpoch; epoch++ {
+	for epoch := startEpoch; epoch <= endEpoch; epoch++ {
 		g.Go(func() error {
 			tipset, err := c.ChainGetTipSetByHeight(ctx, abi.ChainEpoch(epoch), types.TipSetKey{})
 			if err != nil {
