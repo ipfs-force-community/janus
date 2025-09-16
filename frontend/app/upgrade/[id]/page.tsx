@@ -258,7 +258,8 @@ export default function UpgradeDetails() {
     ...upgrade,
     status: upgrade.status || fallbacks.defaultStatus,
     notes: upgrade.notes || fallbacks.defaultNotes,
-    releaseTag: upgrade.lotusReleaseTag || fallbacks.defaultReleaseTag,
+    lotusReleaseTag: upgrade.lotusReleaseTag || fallbacks.defaultReleaseTag,
+    venusReleaseTag: upgrade.venusReleaseTag || fallbacks.defaultReleaseTag,
     specs: upgrade.specs || fallbacks.emptySpecs,
     fips: fips,
   }
@@ -331,7 +332,7 @@ export default function UpgradeDetails() {
 
           <div className="flex-1 max-w-4xl">
             <section id="overview" className="mb-12">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                 <div className="bg-muted/30 rounded-lg p-4">
                   <div className="text-sm text-muted-foreground mb-1">Network Version</div>
                   <div className="text-lg font-mono">{safeUpgrade.networkVersion}</div>
@@ -349,8 +350,12 @@ export default function UpgradeDetails() {
                   </div>
                 </div>
                 <div className="bg-muted/30 rounded-lg p-4">
-                  <div className="text-sm text-muted-foreground mb-1">Release Tag</div>
-                  <div className="text-lg font-mono">{safeUpgrade.releaseTag}</div>
+                  <div className="text-sm text-muted-foreground mb-1">Lotus Release Tag</div>
+                  <div className="text-lg font-mono">{safeUpgrade.lotusReleaseTag.replace(/^lotus/i, '')}</div>
+                </div>
+                <div className="bg-muted/30 rounded-lg p-4">
+                  <div className="text-sm text-muted-foreground mb-1">Venus Release Tag</div>
+                  <div className="text-lg font-mono">{safeUpgrade.venusReleaseTag.replace(/^venus/i, '')}</div>
                 </div>
               </div>
             </section>
