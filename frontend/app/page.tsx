@@ -131,7 +131,9 @@ function UpgradeCard({ upgrade, upgradeId }: { upgrade: Upgrade; upgradeId: stri
                 <p className="font-mono text-lg">{safeUpgrade.epochTarget?.toLocaleString() || "TBD"}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Estimated Time</p>
+                <p className="text-sm font-medium text-muted-foreground">{
+                  safeUpgrade.status === "Finalized" ? "Finalized Time" : "Estimated Time"
+                }</p>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   <span className="text-sm">
