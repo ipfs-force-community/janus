@@ -410,6 +410,22 @@ export default function UpgradeDetails() {
                           </div>
                           <h3 className="text-xl font-semibold mb-2">{fip.title}</h3>
                           {fip.description && <p className="text-sm text-muted-foreground mb-4">{fip.description}</p>}
+
+                          {fip.showDetailedImpact && (
+                            <div className="flex justify-start mb-6">
+                              <Button
+                                variant="default"
+                                size="lg"
+                                className="bg-primary text-white shadow-lg hover:scale-105 transition-transform"
+                                onClick={() => {
+                                  setSelectedFIP(fip)
+                                  setActiveFIPId(fip.id)
+                                }}
+                              >
+                                Miner Impact Analysis
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -498,21 +514,6 @@ export default function UpgradeDetails() {
                                   )}
                                 </ul>
                               </div>
-                            )}
-                          </div>
-
-                          <div className="flex justify-end mt-6">
-                            {fip.showDetailedImpact && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  setSelectedFIP(fip)
-                                  setActiveFIPId(fip.id)
-                                }}
-                              >
-                                View Detailed Impact
-                              </Button>
                             )}
                           </div>
                         </div>

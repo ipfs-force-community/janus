@@ -11,6 +11,7 @@ import (
 )
 
 func TestNewClient(t *testing.T) {
+	t.Skip("Skipping test that requires a running lotus node")
 	ctx := context.Background()
 	client, err := NewClient(ctx, "http://127.0.0.1:3463", "")
 	if err != nil {
