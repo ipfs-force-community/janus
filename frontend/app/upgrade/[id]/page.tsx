@@ -373,11 +373,29 @@ export default function UpgradeDetails() {
                 </div>
                 <div className="bg-muted/30 rounded-lg p-4">
                   <div className="text-sm text-muted-foreground mb-1">Lotus Release Tag</div>
-                  <div className="text-lg font-mono">{safeUpgrade.lotusReleaseTag.replace(/^lotus/i, '')}</div>
+                  <div className="text-lg font-mono">
+                    <a
+                      href={safeUpgrade.lotusReleaseUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      {safeUpgrade.lotusReleaseTag.replace(/^lotus/i, '')}
+                    </a>
+                  </div>
                 </div>
                 <div className="bg-muted/30 rounded-lg p-4">
                   <div className="text-sm text-muted-foreground mb-1">Venus Release Tag</div>
-                  <div className="text-lg font-mono">{safeUpgrade.venusReleaseTag.replace(/^venus/i, '')}</div>
+                  <div className="text-lg font-mono">
+                    <a
+                      href={safeUpgrade.venusReleaseUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      {safeUpgrade.venusReleaseTag.replace(/^venus/i, '')}
+                    </a>
+                  </div>
                 </div>
               </div>
             </section>
@@ -392,145 +410,159 @@ export default function UpgradeDetails() {
 
               <div className="space-y-6">
                 {safeUpgrade.fips.length > 0 ? (
-                  safeUpgrade.fips.map((fip: any, index: number) => (
-                    <motion.div
-                      key={fip.id}
-                      id={fip.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
-                      className={`border rounded-lg p-6 hover:shadow-sm transition-all ${activeFIPId === fip.id ? "border-primary shadow-sm bg-primary/5" : ""
-                        }`}
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-3">
-                            <Badge variant="outline" className="font-mono">
-                              {fip.id}
-                            </Badge>
-                            {isImportantFip(fip, safeUpgrade.importantFips) && <Star className="h-4 w-4 text-amber-500" aria-label="Important FIP" />}
-                            {fip.category && (
-                              <Badge
-                                className={
-                                  categoryColors[fip.category as keyof typeof categoryColors] || categoryColors.Storage
-                                }
-                              >
-                                {fip.category}
+                  safeUpgrade.fips.map((fip: any, index: number) => {
+                    const isFRC = fip.id.toLowerCase().startsWith("frc");
+                    const baseUrl = isFRC
+                      ? "https://github.com/filecoin-project/FIPs/blob/master/FRCs"
+                      : "https://github.com/filecoin-project/FIPs/blob/master/FIPS";
+                    const url = `${baseUrl}/${fip.id.toLowerCase()}.md`;
+
+                    return (
+                      <motion.div
+                        key={fip.id}
+                        id={fip.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className={`border rounded-lg p-6 hover:shadow-sm transition-all ${activeFIPId === fip.id ? "border-primary shadow-sm bg-primary/5" : ""}`}
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-3">
+                              <Badge variant="outline" className="font-mono">
+                                <a
+                                  href={url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="hover:underline"
+                                >
+                                  {fip.id}
+                                </a>
                               </Badge>
-                            )}
-                          </div>
-                          <h3 className="text-xl font-semibold mb-2">{fip.title}</h3>
-                          {fip.description && <p className="text-sm text-muted-foreground mb-4">{fip.description}</p>}
-
-                          {fip.showDetailedImpact && (
-                            <div className="flex justify-start mb-6">
-                              <Button
-                                variant="default"
-                                size="lg"
-                                className="bg-primary text-white shadow-lg hover:scale-105 transition-transform"
-                                onClick={() => {
-                                  setSelectedFIP(fip)
-                                  setActiveFIPId(fip.id)
-                                }}
-                              >
-                                Fips Impact Track
-                              </Button>
+                              {isImportantFip(fip, safeUpgrade.importantFips) && <Star className="h-4 w-4 text-amber-500" aria-label="Important FIP" />}
+                              {fip.category && (
+                                <Badge
+                                  className={
+                                    categoryColors[fip.category as keyof typeof categoryColors] || categoryColors.Storage
+                                  }
+                                >
+                                  {fip.category}
+                                </Badge>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      </div>
+                            <h3 className="text-xl font-semibold mb-2">{fip.title}</h3>
+                            {fip.description && <p className="text-sm text-muted-foreground mb-4">{fip.description}</p>}
 
-                      {fip.impacts && (
-                        <div className="border-t pt-6">
-                          <div className="space-y-6">
-                            {fip.impacts.storageProviders && (
-                              <div>
-                                <h5 className="font-medium text-blue-700 dark:text-blue-400 mb-3 flex items-center gap-2">
-                                  <Server className="h-4 w-4" />
-                                  Storage Providers
-                                </h5>
-                                <ul className="ml-6 space-y-1">
-                                  {fip.impacts.storageProviders.length > 0 ? (
-                                    fip.impacts.storageProviders.map((impact: string, idx: number) => (
-                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                        <span className="mt-1 text-xs">•</span>
-                                        {impact}
-                                      </li>
-                                    ))
-                                  ) : (
-                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-
-                            {fip.impacts.clients && (
-                              <div>
-                                <h5 className="font-medium text-orange-700 dark:text-orange-400 mb-3 flex items-center gap-2">
-                                  <User className="h-4 w-4" />
-                                  Clients
-                                </h5>
-                                <ul className="ml-6 space-y-1">
-                                  {fip.impacts.clients.length > 0 ? (
-                                    fip.impacts.clients.map((impact: string, idx: number) => (
-                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                        <span className="mt-1 text-xs">•</span>
-                                        {impact}
-                                      </li>
-                                    ))
-                                  ) : (
-                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-
-                            {fip.impacts.tokenHolders && (
-                              <div>
-                                <h5 className="font-medium text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-2">
-                                  <DollarSign className="h-4 w-4" />
-                                  Token Holders
-                                </h5>
-                                <ul className="ml-6 space-y-1">
-                                  {fip.impacts.tokenHolders.length > 0 ? (
-                                    fip.impacts.tokenHolders.map((impact: string, idx: number) => (
-                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                        <span className="mt-1 text-xs">•</span>
-                                        {impact}
-                                      </li>
-                                    ))
-                                  ) : (
-                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-
-                            {fip.impacts.applicationDevelopers && (
-                              <div>
-                                <h5 className="font-medium text-green-700 dark:text-green-400 mb-3 flex items-center gap-2">
-                                  <Code className="h-4 w-4" />
-                                  Application Developers
-                                </h5>
-                                <ul className="ml-6 space-y-1">
-                                  {fip.impacts.applicationDevelopers.length > 0 ? (
-                                    fip.impacts.applicationDevelopers.map((impact: string, idx: number) => (
-                                      <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                                        <span className="mt-1 text-xs">•</span>
-                                        {impact}
-                                      </li>
-                                    ))
-                                  ) : (
-                                    <li className="text-sm text-muted-foreground">No impact specified yet.</li>
-                                  )}
-                                </ul>
+                            {fip.showDetailedImpact && (
+                              <div className="flex justify-start mb-6">
+                                <Button
+                                  variant="default"
+                                  size="lg"
+                                  className="bg-primary text-white shadow-lg hover:scale-105 transition-transform"
+                                  onClick={() => {
+                                    setSelectedFIP(fip);
+                                    setActiveFIPId(fip.id);
+                                  }}
+                                >
+                                  Fips Impact Track
+                                </Button>
                               </div>
                             )}
                           </div>
                         </div>
-                      )}
-                    </motion.div>
-                  ))
+
+                        {fip.impacts && (
+                          <div className="border-t pt-6">
+                            <div className="space-y-6">
+                              {fip.impacts.storageProviders && (
+                                <div>
+                                  <h5 className="font-medium text-blue-700 dark:text-blue-400 mb-3 flex items-center gap-2">
+                                    <Server className="h-4 w-4" />
+                                    Storage Providers
+                                  </h5>
+                                  <ul className="ml-6 space-y-1">
+                                    {fip.impacts.storageProviders.length > 0 ? (
+                                      fip.impacts.storageProviders.map((impact: string, idx: number) => (
+                                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                          <span className="mt-1 text-xs">•</span>
+                                          {impact}
+                                        </li>
+                                      ))
+                                    ) : (
+                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {fip.impacts.clients && (
+                                <div>
+                                  <h5 className="font-medium text-orange-700 dark:text-orange-400 mb-3 flex items-center gap-2">
+                                    <User className="h-4 w-4" />
+                                    Clients
+                                  </h5>
+                                  <ul className="ml-6 space-y-1">
+                                    {fip.impacts.clients.length > 0 ? (
+                                      fip.impacts.clients.map((impact: string, idx: number) => (
+                                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                          <span className="mt-1 text-xs">•</span>
+                                          {impact}
+                                        </li>
+                                      ))
+                                    ) : (
+                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {fip.impacts.tokenHolders && (
+                                <div>
+                                  <h5 className="font-medium text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-2">
+                                    <DollarSign className="h-4 w-4" />
+                                    Token Holders
+                                  </h5>
+                                  <ul className="ml-6 space-y-1">
+                                    {fip.impacts.tokenHolders.length > 0 ? (
+                                      fip.impacts.tokenHolders.map((impact: string, idx: number) => (
+                                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                          <span className="mt-1 text-xs">•</span>
+                                          {impact}
+                                        </li>
+                                      ))
+                                    ) : (
+                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {fip.impacts.applicationDevelopers && (
+                                <div>
+                                  <h5 className="font-medium text-green-700 dark:text-green-400 mb-3 flex items-center gap-2">
+                                    <Code className="h-4 w-4" />
+                                    Application Developers
+                                  </h5>
+                                  <ul className="ml-6 space-y-1">
+                                    {fip.impacts.applicationDevelopers.length > 0 ? (
+                                      fip.impacts.applicationDevelopers.map((impact: string, idx: number) => (
+                                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                                          <span className="mt-1 text-xs">•</span>
+                                          {impact}
+                                        </li>
+                                      ))
+                                    ) : (
+                                      <li className="text-sm text-muted-foreground">No impact specified yet.</li>
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </motion.div>
+                    );
+                  })
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">
                     <p>No FIP specifications available for this upgrade.</p>

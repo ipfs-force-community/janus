@@ -101,7 +101,7 @@ function UpgradeCard({ upgrade, upgradeId }: { upgrade: Upgrade; upgradeId: stri
       className="h-full"
     >
       <Card
-        className="cursor-pointer transition-all duration-200 hover:shadow-lg h-full flex flex-col"
+        className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 h-full flex flex-col"
         onClick={handleCardClick}
       >
         <CardHeader>
@@ -159,26 +159,16 @@ function UpgradeCard({ upgrade, upgradeId }: { upgrade: Upgrade; upgradeId: stri
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
                   <GitBranch className="h-4 w-4" />
-                  <a
-                    href={safeUpgrade.lotusReleaseUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-muted px-2 py-1 rounded text-sm hover:underline cursor-pointer"
-                  >
+                  <span className="bg-muted px-2 py-1 rounded text-sm">
                     {safeUpgrade.lotusReleaseTag}
-                  </a>
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <GitBranch className="h-4 w-4" />
-                  <a
-                    href={safeUpgrade.venusReleaseUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-muted px-2 py-1 rounded text-sm hover:underline cursor-pointer"
-                  >
+                  <span className="bg-muted px-2 py-1 rounded text-sm">
                     {safeUpgrade.venusReleaseTag}
-                  </a>
+                  </span>
                 </div>
               </div>
             </div>
@@ -187,27 +177,11 @@ function UpgradeCard({ upgrade, upgradeId }: { upgrade: Upgrade; upgradeId: stri
               <p className="text-sm font-medium text-muted-foreground mb-2">FIP Specifications</p>
               <div className="flex flex-wrap gap-2">
                 {safeUpgrade.specs.length > 0 ? (
-                  safeUpgrade.specs.map((spec) => {
-                    const isFRC = spec.toLowerCase().startsWith("frc")
-                    const baseUrl = isFRC
-                      ? "https://github.com/filecoin-project/FIPs/blob/master/FRCs"
-                      : "https://github.com/filecoin-project/FIPs/blob/master/FIPS"
-                    const url = `${baseUrl}/${spec.toLowerCase()}.md`
-
-                    return (
-                      <Badge key={spec} variant="outline" className="text-xs">
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {spec}
-                        </a>
-                      </Badge>
-                    )
-                  })
+                  safeUpgrade.specs.map((spec) => (
+                    <Badge key={spec} variant="outline" className="text-xs">
+                      {spec}
+                    </Badge>
+                  ))
                 ) : (
                   <span className="text-sm text-muted-foreground">No FIP specifications available</span>
                 )}
@@ -215,7 +189,9 @@ function UpgradeCard({ upgrade, upgradeId }: { upgrade: Upgrade; upgradeId: stri
             </div>
           </div>
 
-          <div className="text-xs text-muted-foreground border-t pt-3 mt-4">Click to view detailed FIP analysis →</div>
+          <div className="text-xs text-muted-foreground border-t pt-3 mt-4 text-center hover:text-primary">
+            Click to view detailed FIP analysis →
+          </div>
         </CardContent>
       </Card>
     </motion.div>
