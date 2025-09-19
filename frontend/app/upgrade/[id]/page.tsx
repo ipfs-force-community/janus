@@ -42,6 +42,7 @@ const isImportantFip = (fip: any, importantFips: string[]) => {
 interface MinerCountData {
   date: string;
   count: number;
+  cost: number;
 }
 
 interface FIPImpactModalProps {
@@ -100,10 +101,10 @@ function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5" />
-                Filecoin Miner Count Trends
+                Filecoin Miner Growth & Costs
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                Historical and projected changes in Filecoin network miner participation
+                Daily new miner count alongside the estimated cost required to create a new miner
               </p>
               <div className="mt-2">
                 <select
@@ -152,7 +153,9 @@ function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
                         labelFormatter={(label) => `Date: ${label}`}
                         formatter={(value, name) => [
                           value.toLocaleString(),
-                          name === 'count' ? 'Total Miners' : 'Active Miners',
+                          name === 'count'
+                            ? 'New Miners (daily)'
+                            : 'Cost per Miner (estimated, actual after NV27 upgrade)',
                         ]}
                       />
                       <Line
@@ -163,6 +166,14 @@ function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
                         dot={{ fill: '#8884d8', stroke: '#8884d8', strokeWidth: 2, r: 4 }}
                         activeDot={{ r: 6, stroke: '#8884d8', strokeWidth: 2 }}
                       />
+                      <Line
+                        type="monotone"
+                        dataKey="cost"
+                        stroke="#ca9882ff"
+                        strokeWidth={2}
+                        dot={{ fill: '#82ca9d', stroke: '#82ca9d', strokeWidth: 2, r: 4 }}
+                        activeDot={{ r: 6, stroke: '#82ca9d', strokeWidth: 2 }}
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -171,7 +182,7 @@ function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
           </Card>
         </div>
       </DialogContent>
-    </Dialog>
+    </Dialog >
   );
 }
 
@@ -422,7 +433,7 @@ export default function UpgradeDetails() {
                                   setActiveFIPId(fip.id)
                                 }}
                               >
-                                Miner Impact Analysis
+                                Fips Impact Track
                               </Button>
                             </div>
                           )}

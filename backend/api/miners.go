@@ -11,10 +11,14 @@ import (
 	"github.com/ipfs-force-community/janus/database/orm"
 )
 
+// TODO: update actual cost after nv27 upgrade
+const cost = 4.28
+
 // DailyMinerStat represents the daily statistics of new miners
 type DailyMinerStat struct {
-	Date  string `json:"date"`
-	Count int64  `json:"count"`
+	Date  string  `json:"date"`
+	Count int64   `json:"count"`
+	Cost  float64 `json:"cost"`
 }
 
 // GetDailyMinerStats handles the GET /miners endpoint to retrieve daily new miner statistics
@@ -60,6 +64,7 @@ func (s *Server) GetDailyMinerStats(c *gin.Context) {
 		results = append(results, DailyMinerStat{
 			Date:  date,
 			Count: count,
+			Cost:  cost,
 		})
 	}
 
