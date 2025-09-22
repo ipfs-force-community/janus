@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 
+const backendUrl = process.env.BACKEND_URL || 'http://127.0.0.1:10086';
+
 export async function GET(request: Request) {
+  console.log('Backend URL:', backendUrl);
   const { searchParams } = new URL(request.url);
   const range = searchParams.get('range') || '7d';
 
   try {
-    const res = await fetch(`http://127.0.0.1:10086/miners?interval=${range}`, {
+    const res = await fetch(`${backendUrl}/miners?interval=${range}`, {
       method: 'GET',
     });
 
