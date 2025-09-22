@@ -3,7 +3,11 @@ package main
 import (
 	"context"
 	"log"
+	"log/slog"
 	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 
 	"github.com/filecoin-project/go-state-types/builtin"
 	"github.com/filecoin-project/venus/venus-shared/actors/types"
@@ -68,6 +72,8 @@ func action(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 	node, err := chain.NewNode(ctx, c.String("node-endpoint"), c.String("node-token"))
 	if err != nil {
 		return err
@@ -89,6 +95,28 @@ func action(ctx context.Context, c *cli.Command) error {
 		return nil
 	}
 
-	indexer.NewIndexer(ctx, c.Int64("interval"), node, db, createMinerMsgHandler).Start()
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	indexer := indexer.NewIndexer(ctx, c.Int64("interval"), node, db, createMinerMsgHandler)
+	go func() {
+		defer wg.Done()
+		indexer.Start()
+	}()
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	<-sigs
+	slog.Info("received termination signal, initiating shutdown...")
+
+	cancel()
+
+	wg.Wait()
+
+	if err := indexer.Close(); err != nil {
+		return err
+	}
+
+	slog.Info("graceful shutdown complete")
 	return nil
 }

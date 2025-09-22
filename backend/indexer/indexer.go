@@ -47,6 +47,7 @@ func (i *Indexer) Start() {
 			}
 
 		case <-i.ctx.Done():
+			slog.Info("indexer context done, exiting...")
 			return
 		}
 	}
@@ -105,4 +106,15 @@ func (i *Indexer) localHeight() (int64, error) {
 	}
 
 	return latestChain.Height, nil
+}
+
+func (i *Indexer) Close() error {
+	i.node.Close()
+
+	db, err := i.db.DB()
+	if err != nil {
+		return err
+	}
+
+	return db.Close()
 }
