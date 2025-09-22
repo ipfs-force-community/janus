@@ -21,10 +21,10 @@ var miner = &cli.Command{
 }
 
 func minerAction(ctx context.Context, c *cli.Command) error {
-	client := ctx.Value(contextKey("node_endpoint")).(*chain.Client)
+	node := ctx.Value(contextKey("node_endpoint")).(*chain.Node)
 	db := ctx.Value(contextKey("db")).(*gorm.DB)
 
-	if err := client.SyncBlocks(c.Int64("start-epoch"), c.Int64("end-epoch"), func(blockMeta *chain.BlockMeta, msg *types.Message) error {
+	if err := node.SyncBlocks(c.Int64("start-epoch"), c.Int64("end-epoch"), func(blockMeta *chain.BlockMeta, msg *types.Message) error {
 		if msg.To == builtin.StoragePowerActorAddr && msg.Method == builtin.MethodsPower.CreateMiner {
 			if err := db.Create(&orm.Miner{
 				Height:    blockMeta.Height,

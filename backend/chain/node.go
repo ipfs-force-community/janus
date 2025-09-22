@@ -7,21 +7,21 @@ import (
 	v1 "github.com/filecoin-project/venus/venus-shared/api/chain/v1"
 )
 
-// Client wraps the Filecoin full node API client
-type Client struct {
+// Node wraps the Filecoin full node API client
+type Node struct {
 	ctx context.Context
 	v1.FullNode
 	closer jsonrpc.ClientCloser
 }
 
-// NewClient creates a new Filecoin full node API client
-func NewClient(ctx context.Context, url string, token string) (*Client, error) {
+// NewNode creates a new Node instance
+func NewNode(ctx context.Context, url string, token string) (*Node, error) {
 	node, closer, err := v1.DialFullNodeRPC(ctx, url, token, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Client{
+	return &Node{
 		ctx:      ctx,
 		FullNode: node,
 		closer:   closer,
@@ -29,11 +29,16 @@ func NewClient(ctx context.Context, url string, token string) (*Client, error) {
 }
 
 // ChainHeadHeight returns the current chain head height
-func (c *Client) ChainHeadHeight() (int64, error) {
-	head, err := c.FullNode.ChainHead(c.ctx)
+func (n *Node) ChainHeadHeight() (int64, error) {
+	head, err := n.FullNode.ChainHead(n.ctx)
 	if err != nil {
 		return 0, err
 	}
 
 	return int64(head.Height()), nil
+}
+
+// Close closes the client connection
+func (n *Node) Close() {
+	n.closer()
 }

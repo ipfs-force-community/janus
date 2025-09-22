@@ -68,7 +68,7 @@ func action(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	client, err := chain.NewClient(ctx, c.String("node-endpoint"), c.String("node-token"))
+	node, err := chain.NewNode(ctx, c.String("node-endpoint"), c.String("node-token"))
 	if err != nil {
 		return err
 	}
@@ -89,6 +89,6 @@ func action(ctx context.Context, c *cli.Command) error {
 		return nil
 	}
 
-	indexer.NewIndexer(ctx, c.Int64("interval"), client, db, createMinerMsgHandler).Start()
+	indexer.NewIndexer(ctx, c.Int64("interval"), node, db, createMinerMsgHandler).Start()
 	return nil
 }

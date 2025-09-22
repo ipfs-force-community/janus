@@ -66,12 +66,12 @@ func main() {
 
 			ctx = context.WithValue(ctx, contextKey("db"), db)
 
-			client, err := chain.NewClient(ctx, c.String("node-endpoint"), c.String("node-token"))
+			node, err := chain.NewNode(ctx, c.String("node-endpoint"), c.String("node-token"))
 			if err != nil {
 				return ctx, err
 			}
 
-			ctx = context.WithValue(ctx, contextKey("node_endpoint"), client)
+			ctx = context.WithValue(ctx, contextKey("node_endpoint"), node)
 			return ctx, nil
 		},
 		Commands: []*cli.Command{

@@ -24,12 +24,12 @@ type BlockMeta struct {
 type MsgHandler func(blockMeta *BlockMeta, msg *types.Message) error
 
 // SyncBlocks synchronizes blocks from startEpoch to endEpoch and processes messages using the provided MsgHandler
-func (c *Client) SyncBlocks(startEpoch, endEpoch int64, msgHandler MsgHandler) error {
+func (n *Node) SyncBlocks(startEpoch, endEpoch int64, msgHandler MsgHandler) error {
 	if startEpoch < 0 {
 		return errors.New("startEpoch must be greater than 0")
 	}
 
-	headHeight, err := c.ChainHeadHeight()
+	headHeight, err := n.ChainHeadHeight()
 	if err != nil {
 		return err
 	}
@@ -48,28 +48,28 @@ func (c *Client) SyncBlocks(startEpoch, endEpoch int64, msgHandler MsgHandler) e
 	// batch download blocks
 	for endEpoch-startEpoch > batchBlockNum {
 		slog.Info("syncing batch", slog.Int64("startEpoch", startEpoch), slog.Int64("endEpoch", startEpoch+batchBlockNum))
-		if err := c.syncBatch(startEpoch, startEpoch+batchBlockNum, msgHandler); err != nil {
+		if err := n.syncBatch(startEpoch, startEpoch+batchBlockNum, msgHandler); err != nil {
 			return err
 		}
 
 		startEpoch += batchBlockNum
 	}
 
-	return c.syncBatch(startEpoch, endEpoch, msgHandler)
+	return n.syncBatch(startEpoch, endEpoch, msgHandler)
 }
 
-func (c *Client) syncBatch(startEpoch, endEpoch int64, handler MsgHandler) error {
-	g, ctx := errgroup.WithContext(c.ctx)
+func (n *Node) syncBatch(startEpoch, endEpoch int64, handler MsgHandler) error {
+	g, ctx := errgroup.WithContext(n.ctx)
 	for epoch := startEpoch; epoch <= endEpoch; epoch++ {
 		g.Go(func() error {
-			tipset, err := c.ChainGetTipSetByHeight(ctx, abi.ChainEpoch(epoch), types.TipSetKey{})
+			tipset, err := n.ChainGetTipSetByHeight(ctx, abi.ChainEpoch(epoch), types.TipSetKey{})
 			if err != nil {
 				return fmt.Errorf("failed to get tipset at epoch %d: %w", epoch, err)
 			}
 
 			seen := make(map[cid.Cid]struct{})
 			for _, blk := range tipset.Blocks() {
-				msgs, err := c.ChainGetBlockMessages(ctx, blk.Cid())
+				msgs, err := n.ChainGetBlockMessages(ctx, blk.Cid())
 				if err != nil {
 					return fmt.Errorf("get messages for block %s: %w", blk.Cid(), err)
 				}

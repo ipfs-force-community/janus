@@ -20,12 +20,12 @@ const (
 type Indexer struct {
 	ctx         context.Context
 	interval    int64
-	node        *chain.Client
+	node        *chain.Node
 	db          *gorm.DB
 	msgHandlers []chain.MsgHandler
 }
 
-func NewIndexer(ctx context.Context, interval int64, node *chain.Client, db *gorm.DB, msgHandlers ...chain.MsgHandler) *Indexer {
+func NewIndexer(ctx context.Context, interval int64, node *chain.Node, db *gorm.DB, msgHandlers ...chain.MsgHandler) *Indexer {
 	return &Indexer{
 		ctx:         ctx,
 		interval:    interval,
