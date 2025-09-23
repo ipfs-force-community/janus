@@ -11,9 +11,6 @@ import (
 	"github.com/ipfs-force-community/janus/database/orm"
 )
 
-// TODO: update actual cost after nv27 upgrade
-const cost = 4.28
-
 // DailyMinerStat represents the daily statistics of new miners
 type DailyMinerStat struct {
 	Date  string  `json:"date"`
@@ -43,7 +40,11 @@ func (s *Server) GetDailyMinerStats(c *gin.Context) {
 
 	var dbResults []DailyMinerStat
 	if err := s.db.Model(&orm.Miner{}).
-		Select("DATE_FORMAT(FROM_UNIXTIME(timestamp), '%Y-%m-%d') AS date, COUNT(*) AS count").
+		Select(`
+			DATE_FORMAT(FROM_UNIXTIME(timestamp), '%Y-%m-%d') AS date, 
+			COUNT(*) AS count,
+			AVG(CAST(cost AS DECIMAL(32,0))) / 1e18 AS cost
+		`).
 		Where("timestamp BETWEEN ? AND ?", start, end).
 		Group("date").
 		Order("date").
@@ -52,20 +53,36 @@ func (s *Server) GetDailyMinerStats(c *gin.Context) {
 		return
 	}
 
-	resultMap := make(map[string]int64, len(dbResults))
+	countMap := make(map[string]int64, len(dbResults))
+	costMap := make(map[string]float64, len(dbResults))
 	for _, r := range dbResults {
-		resultMap[r.Date] = r.Count
+		countMap[r.Date] = r.Count
+		costMap[r.Date] = r.Cost
 	}
 
 	var results []DailyMinerStat
+	var lastNonZeroCost float64
+
 	for d := 0; d <= days; d++ {
 		date := startTime.AddDate(0, 0, d).Format("2006-01-02")
-		count := resultMap[date]
+		count := countMap[date]
+		cost := costMap[date]
+
+		if lastNonZeroCost == 0 && cost != 0 {
+			lastNonZeroCost = cost
+		}
+
 		results = append(results, DailyMinerStat{
 			Date:  date,
 			Count: count,
 			Cost:  cost,
 		})
+	}
+
+	for i := 0; i < len(results); i++ {
+		if results[i].Cost == 0 {
+			results[i].Cost = lastNonZeroCost
+		}
 	}
 
 	if results == nil {

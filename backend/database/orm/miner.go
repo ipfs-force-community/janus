@@ -10,4 +10,5 @@ type Miner struct {
 	Timestamp int64  `gorm:"not null"`
 	MsgCid    string `gorm:"type:varchar(255);column:msg_cid;unique;not null"`
 	From      string `gorm:"type:varchar(255);not null"`
+	Cost      string `gorm:"type:varchar(255);not null"`
 }
