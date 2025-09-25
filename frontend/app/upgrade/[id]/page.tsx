@@ -155,7 +155,7 @@ function FIPImpactModal({ fip, isOpen, onClose }: FIPImpactModalProps) {
                           value.toLocaleString(),
                           name === 'count'
                             ? 'New Miners (daily)'
-                            : 'Cost per Miner (estimated, actual after NV27 upgrade)',
+                            : 'Cost per Miner',
                         ]}
                       />
                       <Line
