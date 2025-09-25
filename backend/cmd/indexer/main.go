@@ -87,6 +87,7 @@ func action(ctx context.Context, c *cli.Command) error {
 				Timestamp: blockMeta.Timestamp,
 				MsgCid:    msg.Cid().String(),
 				From:      msg.From.String(),
+				Cost:      msg.Value.String(),
 			}).Error; err != nil {
 				return err
 			}
