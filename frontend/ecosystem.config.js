@@ -3,8 +3,8 @@ module.exports = {
     {
       name: 'janus-frontend',
       script: 'npm',
-      args: 'run start',
-      cwd: '/path/to/your/production/frontend', // 生产服务器上的项目路径
+      args: 'run start -- -p 3001', // 监听端口 3001，根据实际情况修改
+      cwd: '.', // 生产服务器上的项目路径
       instances: '1',
       exec_mode: 'cluster',
       env: {

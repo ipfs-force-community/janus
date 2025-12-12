@@ -59,7 +59,7 @@ frontend:
 # Create a compressed package of the frontend build for deployment
 frontend-package:
 	@echo "Creating frontend deployment package..."
-	cd $(FRONTEND_DIR) && npm install && npm ci --omit=dev &&npm run build
+	cd $(FRONTEND_DIR) && npm install && npm run build && npm ci --omit=dev
 	@echo "Compressing build artifacts..."
 	cd $(FRONTEND_DIR) && $(TAR_CMD) \
 	  janus-frontend-$(shell date +%Y%m%d%H%M%S).tar.gz \
