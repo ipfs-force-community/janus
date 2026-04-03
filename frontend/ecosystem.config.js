@@ -12,7 +12,7 @@ module.exports = {
       },
       env_production: {
         NODE_ENV: 'production',
-        BACKEND_URL: 'http://localhost:10086',
+        API_URL: 'http://localhost:10086',
       },
     },
   ],

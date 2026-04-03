@@ -1,0 +1,27 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# Documentation
+*.md
+
+# Backend build artifacts
+backend/bin
+
+# Frontend dev artifacts
+frontend/node_modules
+frontend/.next
+frontend/.env
+
+# Docker files (avoid recursive context)
+docker-compose*.yml
+.env*
+nginx/
+
+# OS files
+.DS_Store
+**/.DS_Store

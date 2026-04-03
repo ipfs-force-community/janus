@@ -1,0 +1,13 @@
+# Docker 环境专用配置
+# 【极度重要】：这里的 username、password 和 db_name 必须手动与您在 `.env` 文件里配置的保持一模一样！
+# 否则后端启动时将发生 Access denied 连接不到数据库的报错。
+
+"master":
+  "host": "mysql"     # 在跨容器网络中直接写服务名即可
+  "port": 3306
+  "username": "root"
+  "password": "your_secure_password_here"   # 请改成您 .env 文件中真实的 MYSQL_ROOT_PASSWORD
+  "db_name": "janus"                        # 请改成您 .env 文件中真实的 MYSQL_DATABASE
+"max_open_conns": 40
+"max_idle_conns": 20
+"log_level": "info"

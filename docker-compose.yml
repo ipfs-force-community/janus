@@ -1,0 +1,174 @@
+services:
+  # ========================
+  # Nginx 反向代理
+  # ========================
+  nginx:
+    container_name: janus-nginx
+    image: nginx:alpine
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      api:
+        condition: service_started
+      frontend:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - janus-net
+
+  # ========================
+  # 前端 Next.js
+  # ========================
+  frontend:
+    container_name: janus-frontend
+    image: ky/janus-frontend:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        API_URL: http://api:10086
+    environment:
+      - API_URL=http://api:10086
+      - PORT=3001
+    restart: unless-stopped
+    networks:
+      - janus-net
+
+  # ========================
+  # API 服务（常驻，对外提供接口）
+  # ========================
+  api:
+    container_name: janus-api
+    image: ky/janus-api:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    entrypoint: [ "/app/api" ]
+    command:
+      - "--config"
+      - "/app/config.yaml"
+      - "--port"
+      - "10086"
+    volumes:
+      - ./backend/config/config.docker.yaml:/app/config.yaml:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - janus-net
+
+  # ========================
+  # Indexer 索引服务（常驻，无其他服务依赖此服务）
+  # ========================
+  indexer:
+    container_name: janus-indexer
+    image: ky/janus-indexer:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    entrypoint: [ "/app/indexer" ]
+    command:
+      - "--config"
+      - "/app/config.yaml"
+      - "--node-endpoint"
+      - "${FILECOIN_NODE_ENDPOINT:-http://127.0.0.1:1234}"
+      - "--node-token"
+      - "${FILECOIN_NODE_TOKEN}"
+      - "--interval"
+      - "${INDEXER_INTERVAL:-10}"
+    volumes:
+      - ./backend/config/config.docker.yaml:/app/config.yaml:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - janus-net
+
+  # ========================
+  # Janus Miner 初始化数据同步（一次性任务）
+  # ========================
+  janus-miner:
+    container_name: janus-miner-init
+    image: ky/janus-miner:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    entrypoint: [ "/app/janus", "miner" ]
+    command:
+      - "--config"
+      - "/app/config.yaml"
+      - "--node-endpoint"
+      - "${FILECOIN_NODE_ENDPOINT:-http://127.0.0.1:1234}"
+      - "--node-token"
+      - "${FILECOIN_NODE_TOKEN}"
+      - "--start-epoch"
+      - "${MINER_START_EPOCH:-5260000}"
+      - "--end-epoch"
+      - "${MINER_END_EPOCH:-5261000}"
+    volumes:
+      - ./backend/config/config.docker.yaml:/app/config.yaml:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
+    profiles:
+      - init-task
+    networks:
+      - janus-net
+
+  # ========================
+  # MySQL 数据库
+  # ========================
+  mysql:
+    container_name: janus-mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-janus}
+      MYSQL_CHARSET: utf8mb4
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - janus-net
+
+  # ========================
+  # Mock 用的 Filecoin 伪造节点
+  # ========================
+  filecoin-mock:
+    container_name: janus-mock-node
+    image: python:3-alpine
+    command: >
+      python -c '
+      import http.server
+      class MockRPC(http.server.BaseHTTPRequestHandler):
+          def log_message(self, format, *args): pass
+          def do_POST(self):
+              self.send_response(200)
+              self.end_headers()
+              self.wfile.write(b"{\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{}}")
+      http.server.HTTPServer(("0.0.0.0", 1234), MockRPC).serve_forever()
+      '
+    networks:
+      - janus-net
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  janus-net:
+    driver: bridge

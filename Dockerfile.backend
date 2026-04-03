@@ -1,0 +1,39 @@
+# ===== 构建阶段 =====
+FROM golang:1.24-alpine AS builder
+
+# 安装构建依赖
+RUN apk add --no-cache git make gcc musl-dev
+
+WORKDIR /src
+
+# 先复制 go.mod/go.sum，利用 Docker 层缓存加速后续构建
+COPY backend/go.mod backend/go.sum ./
+RUN go mod download
+
+# 复制源码并构建所有二进制
+COPY backend/ .
+
+# 静态编译，去除调试符号以减小体积
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /out/api ./cmd/api
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /out/indexer ./cmd/indexer
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /out/janus ./cmd/janus
+
+# ===== 运行阶段 =====
+FROM alpine:3.21
+
+RUN apk add --no-cache ca-certificates tzdata
+
+ENV TZ=Asia/Shanghai
+
+WORKDIR /app
+
+# 从构建阶段复制二进制
+COPY --from=builder /out/api /app/api
+COPY --from=builder /out/indexer /app/indexer
+COPY --from=builder /out/janus /app/janus
+
+EXPOSE 10086
+
+# 默认运行 API 服务，可通过 docker-compose 的 entrypoint 切换为 indexer
+ENTRYPOINT ["/app/api"]
+CMD ["--config", "/app/config.yaml", "--port", "10086"]
