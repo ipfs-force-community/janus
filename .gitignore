@@ -1,2 +1,16 @@
 .vscode
 backend/bin
+
+# IDE
+.vscode
+.idea
+
+# Backend build artifacts
+backend/bin
+
+.env
+nginx/nginx.conf
+
+# OS files
+.DS_Store
+**/.DS_Store
