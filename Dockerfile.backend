@@ -2,7 +2,8 @@
 FROM golang:1.24-alpine AS builder
 
 # 安装构建依赖
-RUN apk add --no-cache git make gcc musl-dev
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+    apk add --no-cache git make gcc musl-dev
 
 WORKDIR /src
 
@@ -21,7 +22,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /out/janus ./cmd/janus
 # ===== 运行阶段 =====
 FROM alpine:3.21
 
-RUN apk add --no-cache ca-certificates tzdata
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+    apk add --no-cache ca-certificates tzdata
 
 ENV TZ=Asia/Shanghai
 
