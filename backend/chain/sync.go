@@ -9,9 +9,13 @@ import (
 	"github.com/filecoin-project/venus/venus-shared/types"
 	"github.com/ipfs/go-cid"
 	"golang.org/x/sync/errgroup"
+	"golang.org/x/sync/semaphore"
 )
 
-const batchBlockNum = 1000
+const (
+	batchBlockNum = 1000
+	maxConcurrent = 1000
+)
 
 // BlockMeta contains base info about a block
 type BlockMeta struct {
@@ -60,8 +64,14 @@ func (n *Node) SyncBlocks(startEpoch, endEpoch int64, msgHandler MsgHandler) err
 
 func (n *Node) syncBatch(startEpoch, endEpoch int64, handler MsgHandler) error {
 	g, ctx := errgroup.WithContext(n.ctx)
+	sem := semaphore.NewWeighted(maxConcurrent)
 	for epoch := startEpoch; epoch <= endEpoch; epoch++ {
 		g.Go(func() error {
+			if err := sem.Acquire(ctx, 1); err != nil {
+				return err
+			}
+			defer sem.Release(1)
+
 			tipset, err := n.ChainGetTipSetByHeight(ctx, abi.ChainEpoch(epoch), types.TipSetKey{})
 			if err != nil {
 				return fmt.Errorf("failed to get tipset at epoch %d: %w", epoch, err)
