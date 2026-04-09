@@ -35,6 +35,8 @@ services:
     environment:
       - API_URL=http://api:10086
       - PORT=3001
+    ports:
+      - "${FRONTEND_PORT:-50001}:3001"
     restart: unless-stopped
     networks:
       - janus-net
@@ -54,6 +56,8 @@ services:
       - "/app/config.yaml"
       - "--port"
       - "10086"
+    ports:
+      - "${API_PORT:-50002}:10086"
     volumes:
       - ./backend/config/config.docker.yaml:/app/config.yaml:ro
     depends_on:
@@ -133,6 +137,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-janus}
       MYSQL_CHARSET: utf8mb4
+    ports:
+      - "${MYSQL_EXTERNAL_PORT:-50003}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     command:
@@ -147,8 +153,6 @@ services:
     restart: unless-stopped
     networks:
       - janus-net
-
-
 
 volumes:
   mysql_data:

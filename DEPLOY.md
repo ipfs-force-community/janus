@@ -32,8 +32,8 @@ cp .env.docker .env
 #    - MYSQL_ROOT_PASSWORD
 #    - FILECOIN_NODE_ENDPOINT
 #    - FILECOIN_NODE_TOKEN
-#    - MINER_START_EPOCH（可选）
-#    - MINER_END_EPOCH（可选）
+#    - MINER_START_EPOCH
+#    - MINER_END_EPOCH
 
 # 3. ⚠️ 极度重要：同步后端密码映射
 # 请务必打开 backend/config/config.docker.yaml 文件
@@ -102,6 +102,19 @@ docker compose -f docker-compose.yml up -d
 # 外部访问：http://<服务器IP>:80
 ```
 
+### 生产模式（使用外部 nginx）
+
+如果使用外部 nginx 反向代理，不需要启动 docker 中的 nginx 服务：
+
+```bash
+# 只启动除 nginx 外的服务
+docker compose -f docker-compose.yml up -d mysql api frontend indexer
+
+# 外部 nginx 配置示例（参考 nginx/nginx.conf）：
+# - 前端：http://<服务器IP>:50001
+# - API：http://<服务器IP>:50002
+```
+
 ### 开发模式（暴露所有端口）
 
 ```bash
@@ -109,31 +122,32 @@ docker compose -f docker-compose.yml up -d
 docker compose up -d
 
 # 可通过以下地址访问：
-# - Frontend: http://localhost:3001
-# - API: http://localhost:10086
-# - MySQL: localhost:3306
+# - Frontend: http://localhost:50001
+# - API: http://localhost:50002
+# - MySQL: localhost:50003
 ```
 
 ## 环境变量说明
 
-| 变量 | 必填 | 说明 | 默认值 |
-|------|------|------|--------|
-| `MYSQL_ROOT_PASSWORD` | 是 | MySQL root 密码 | - |
-| `MYSQL_DATABASE` | 否 | 数据库名 | janus |
-| `FILECOIN_NODE_ENDPOINT` | 是 | Filecoin 节点 RPC 地址 | - |
-| `FILECOIN_NODE_TOKEN` | 是 | Filecoin 节点 Token | - |
-| `INDEXER_INTERVAL` | 否 | Indexer 轮询间隔（秒） | 10 |
-| `MINER_START_EPOCH` | 否 | 同步起始 epoch | 5260000 |
-| `MINER_END_EPOCH` | 否 | 同步结束 epoch | 5261000 |
-| `NGINX_PORT` | 否 | 对外暴露端口 | 80 |
+| 变量                       | 必填  | 说明                 | 默认值     |
+| ------------------------ | --- | ------------------ | ------- |
+| `MYSQL_ROOT_PASSWORD`    | 是   | MySQL root 密码      | -       |
+| `MYSQL_DATABASE`         | 否   | 数据库名               | janus   |
+| `FILECOIN_NODE_ENDPOINT` | 是   | Filecoin 节点 RPC 地址 | -       |
+| `FILECOIN_NODE_TOKEN`    | fou | Filecoin 节点 Token  | -       |
+| `INDEXER_INTERVAL`       | 否   | Indexer 轮询间隔（秒）    | 10      |
+| `MINER_START_EPOCH`      | 是   | 同步起始 epoch         | 5260000 |
+| `MINER_END_EPOCH`        | 是   | 同步结束 epoch         | 5261000 |
+| `NGINX_PORT`             | 否   | 对外暴露端口             | 80      |
 
 ## 服务说明
 
-| 服务 | 类型 | 说明 |
-|------|------|------|
-| nginx | 常驻 | 反向代理，对外提供 HTTP 服务 |
-| frontend | 常驻 | Next.js 前端 |
-| api | 常驻 | API 服务，提供接口给前端 |
-| indexer | 常驻 | 索引服务，持续同步链上数据 |
-| janus-miner | 一次性 | 初始化数据同步任务 |
-| mysql | 常驻 | MySQL 数据库 |
+| 服务          | 类型  | 说明                |
+| ----------- | --- | ----------------- |
+| nginx       | 常驻  | 反向代理，对外提供 HTTP 服务 |
+| frontend    | 常驻  | Next.js 前端        |
+| api         | 常驻  | API 服务，提供接口给前端    |
+| indexer     | 常驻  | 索引服务，持续同步链上数据     |
+| janus-miner | 一次性 | 初始化数据同步任务         |
+| mysql       | 常驻  | MySQL 数据库         |
+
