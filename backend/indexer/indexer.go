@@ -87,6 +87,8 @@ func (i *Indexer) sync() error {
 		return err
 	}
 
+	slog.Info("indexer sync completed", "from", latestHeight+1, "to", headHeight)
+
 	return nil
 }
 

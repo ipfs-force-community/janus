@@ -2,7 +2,6 @@ package chain
 
 import (
 	"errors"
-	"fmt"
 	"log/slog"
 
 	"github.com/filecoin-project/go-state-types/abi"
@@ -66,6 +65,7 @@ func (n *Node) syncBatch(startEpoch, endEpoch int64, handler MsgHandler) error {
 	g, ctx := errgroup.WithContext(n.ctx)
 	sem := semaphore.NewWeighted(maxConcurrent)
 	for epoch := startEpoch; epoch <= endEpoch; epoch++ {
+		epoch := epoch
 		g.Go(func() error {
 			if err := sem.Acquire(ctx, 1); err != nil {
 				return err
@@ -74,14 +74,16 @@ func (n *Node) syncBatch(startEpoch, endEpoch int64, handler MsgHandler) error {
 
 			tipset, err := n.ChainGetTipSetByHeight(ctx, abi.ChainEpoch(epoch), types.TipSetKey{})
 			if err != nil {
-				return fmt.Errorf("failed to get tipset at epoch %d: %w", epoch, err)
+				slog.Warn("failed to get tipset, skipping epoch", "epoch", epoch, "error", err)
+				return nil
 			}
 
 			seen := make(map[cid.Cid]struct{})
 			for _, blk := range tipset.Blocks() {
 				msgs, err := n.ChainGetBlockMessages(ctx, blk.Cid())
 				if err != nil {
-					return fmt.Errorf("get messages for block %s: %w", blk.Cid(), err)
+					slog.Warn("failed to get block messages, skipping block", "block", blk.Cid(), "error", err)
+					continue
 				}
 
 				process := func(cmsg cid.Cid, m *types.Message) error {
