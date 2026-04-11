@@ -4,7 +4,7 @@ FROM golang:1.24-alpine AS builder
 ENV GOPROXY=https://goproxy.cn,direct
 
 # 安装构建依赖
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
     apk add --no-cache git make gcc musl-dev
 
 WORKDIR /src
@@ -24,7 +24,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /out/janus ./cmd/janus
 # ===== 运行阶段 =====
 FROM alpine:3.21
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
     apk add --no-cache ca-certificates tzdata
 
 ENV TZ=Asia/Shanghai
