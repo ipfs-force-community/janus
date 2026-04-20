@@ -1,21 +1,30 @@
 {
   "id": "FIP-0115",
   "title": "Premium Percentile Base Fee Target",
-  "description": "Replacing the utilization-based base fee adjustment with a premium-based target will stabilize gas markets and improve tipset efficiency, aligning base fee adjustments with congestion signals to reduce proposer duplications.",
-  "showDetailedImpact": false,
+  "description": "Replaces the utilization-based base fee adjustment with a premium-based target to stabilize gas markets and improve tipset efficiency. When the 20th percentile effective premium exceeds 1/8 of the base fee, the base fee increases; when it falls below, the base fee decreases — aligning adjustments with actual congestion signals and reducing proposer transaction duplication.",
+  "showDetailedImpact": true,
   "impacts": {
     "storageProviders": [
-      "Should review gas price configurations, such as premium floors, that may have been tuned for a negligible base fee."
+      "Storage providers should review gas price configurations (such as premium floors) that may have been tuned for a negligible base fee environment.",
+      "Miner software should update default settings to accommodate base fee elasticity — after activation, the base fee will no longer sit near the minimum (100 attoFIL) long-term.",
+      "Tipset efficiency is expected to improve: higher base fees reduce priority fee stratification, which in turn reduces transaction duplication among multiple proposers, achieving higher gas utilization.",
+      "The proportion of proposer income from premiums will decrease: a higher share of transaction fees will be burned (currently ~99.9% is premium, only ~0.1% burned), though improved utilization from better efficiency may partially offset this."
     ],
     "clients": [
-      "Because the base fee will rise more often than before, an insufficient gas fee cap may delay message inclusion."
+      "Because the base fee will rise more often than before, an insufficient gas fee cap may delay message inclusion. Clients should adapt to updated gas estimation recommendations.",
+      "Gas pricing will become more predictable — the base fee will genuinely reflect network congestion, allowing users to estimate transaction costs more accurately.",
+      "Stuck transactions can be replaced by submitting a new transaction with the same nonce and a higher gas price."
     ],
     "tokenHolders": [
-      "Higher base fees reduce net inflation through increased burn."
+      "Higher base fees mean more FIL is burned, directly reducing the network's net inflation rate. Currently ~99.9% of gas fees go to proposers as premium while only ~0.1% is burned; the burn ratio will increase significantly after activation.",
+      "Restoring base fee elasticity makes the EIP-1559 economic model work as designed — providing a healthier value support mechanism for FIL.",
+      "This proposal does not change the consensus incentive structure but improves the gas market's price signaling function, benefiting network efficiency and long-term ecosystem health."
     ],
     "applicationDevelopers": [
-      "Dashboards, economic models, and pricing tools that assume current base fee behavior will need to be updated.",
-      "Systems recommending gas prices to transactors SHOULD be updated."
+      "Dashboards, economic models, and pricing tools that assume current base fee behavior (near-minimum values) will need updates to accommodate base fee elasticity.",
+      "Gas price recommendation systems (GasEstimateGasPremium, eth_maxPriorityFeePerGas, eth_gasPrice, GasEstimateFeeCap) should be updated to use mempool-based simulation rather than historical sampling.",
+      "The FeeCap estimation formula changes to: FeeCap = Premium + BaseFee * (1 + R)^maxqueueblks, where R = 1/8.",
+      "This is a consensus-breaking change — all Filecoin node implementations (Lotus, Forest, Venus) must upgrade. Implementation PRs already exist for Lotus, Forest, and Venus."
     ]
   }
 }

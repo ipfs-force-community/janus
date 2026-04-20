@@ -1,17 +1,24 @@
 {
   "id": "FIP-0113",
   "title": "secp256r1 (P-256) P256VERIFY Precompile for FEVM",
-  "description": "This proposal introduces a new FEVM precompile for efficient ECDSA signature verification over the secp256r1 (P-256) elliptic curve, as specified by Ethereum’s EIP-7951. This enables practical verification of signatures produced by common secure hardware and standards such as WebAuthn/passkeys.",
+  "description": "Adds a P256VERIFY precompile at Ethereum address 0x0100 to the FEVM for efficient ECDSA signature verification over the secp256r1 (P-256) elliptic curve, following Ethereum's EIP-7951 semantics while remaining interface-compatible with RIP-7212, enabling WebAuthn/passkey authentication flows on Filecoin.",
   "showDetailedImpact": false,
   "impacts": {
-    "storageProviders": [],
-    "clients": [
-      "Provides a simpler alternative to custom signature schemes for user authentication in FEVM dApps."
+    "storageProviders": [
+      "No direct impact on storage provider operations. The precompile operates purely at the FEVM layer and does not affect proof-of-power, block production, or sector management."
     ],
-    "tokenHolders": [],
+    "clients": [
+      "Users can authenticate transactions using passkeys, WebAuthn/FIDO2 credentials, and device secure enclaves, enabling passwordless key management for FEVM dApps.",
+      "Lowers the barrier for user identity authentication in FEVM applications and facilitates account abstraction patterns."
+    ],
+    "tokenHolders": [
+      "No direct change to FIL token economics. However, supporting modern authentication methods and cross-chain interoperability may broaden Filecoin's application scenarios and ecosystem value."
+    ],
     "applicationDevelopers": [
-      "Enables account abstraction patterns and authentication flows backed by passkeys and secure hardware.",
-      "Improves portability of applications and libraries that already target EIP-7951 / RIP-7212 style verification."
+      "Developers can call the precompile at address 0x0100 for secp256r1 (P-256) signature verification, eliminating the need for expensive pure-Solidity implementations.",
+      "The precompile interface is fully compatible with Ethereum's EIP-7951/RIP-7212 (same address, 160-byte input format, same return values), significantly reducing cross-chain porting costs.",
+      "On valid signatures the precompile returns 0x…01; on failure it returns an empty byte array. The precompile MUST NOT revert under any circumstances — developers should handle return values accordingly.",
+      "Gas accounting follows FEVM's normal Wasm-instrumented instruction accounting (per FIP-0054), not Ethereum's fixed gas schedule for precompiles."
     ]
   }
 }

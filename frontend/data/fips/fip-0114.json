@@ -1,16 +1,23 @@
 {
   "id": "FIP-0114",
   "title": "Add Support for EIP-7939 (CLZ Opcode) in the FEVM",
-  "description": "This proposal adds the CLZ (Count Leading Zeros) opcode to the Filecoin EVM (FEVM), matching Ethereum’s EIP-7939 behavior. CLZ provides a fast, gas-efficient way to count leading zero bits in a 256-bit word, which is widely used in math, compression, bitmap, and ZK proving workflows.",
+  "description": "Introduces the CLZ (Count Leading Zeros) opcode (0x1e) to the FEVM, matching Ethereum's EIP-7939 behavior. CLZ provides a fast, gas-efficient way to count leading zero bits in a 256-bit word, widely used in math operations, compression, bitmap navigation, and ZK proving workflows.",
   "showDetailedImpact": false,
   "impacts": {
-    "storageProviders": [],
-    "clients": [],
-    "tokenHolders": [],
+    "storageProviders": [
+      "No direct impact on storage providers. The CLZ opcode operates at the FEVM smart contract execution layer and does not affect sector management, proof-of-power, or block production."
+    ],
+    "clients": [
+      "No direct impact on clients, but they can indirectly benefit from lower execution costs and improved developer experience for FEVM applications that rely on efficient bit-level operations."
+    ],
+    "tokenHolders": [
+      "No change to Filecoin consensus incentives or token economics. By reducing on-chain computation costs for certain workloads, the opcode may enable new application patterns."
+    ],
     "applicationDevelopers": [
-      "Improves developer experience and compatibility with Ethereum environments that include EIP-7939.",
-      "Enables more efficient on-chain implementations for math primitives, compression/decompression, and bitmap navigation.",
-      "Can reduce ZK proving costs for applications that currently emulate CLZ using SHR."
+      "Developers can use the native CLZ opcode instead of multiple shifts, comparisons, and constants in Solidity — significantly saving gas and bytecode size.",
+      "CLZ(0) returns 256, a design choice that is convenient for byte/word scanning patterns and enables compact downstream computations (e.g., CLZ(0) >> 3 == 32).",
+      "Particularly beneficial for ZK proving systems: dynamic shifts are disproportionately expensive in zero-knowledge proofs, and native CLZ substantially reduces proving overhead.",
+      "Backwards compatibility note: before activation, opcode 0x1e is an undefined instruction causing execution abort; after activation it will execute CLZ semantics."
     ]
   }
 }

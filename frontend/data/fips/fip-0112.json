@@ -1,22 +1,26 @@
 {
   "id": "FIP-0112",
   "title": "Export Sector Status to FEVM",
-  "description": "We propose exporting new methods ValidateSectorStatus, GenerateSectorLocation, and GetNominalSectorExpiration from the builtin miner actor, allowing FEVM smart contracts to query the status and expiration of Filecoin sectors.",
+  "description": "Exports three new methods — ValidateSectorStatus, GenerateSectorLocation, and GetNominalSectorExpiration — from the builtin miner actor, allowing FEVM smart contracts to query the liveness status (Active/Faulty/Dead) and expiration of Filecoin sectors, laying the foundation for programmable storage applications.",
   "showDetailedImpact": false,
   "impacts": {
     "storageProviders": [
-      "Enables integration with FEVM contracts for real-time sector status monitoring",
-      "Supports better coordination with smart contract-based storage solutions"
+      "Storage providers can integrate with FEVM contracts for real-time sector status monitoring and smart contract-based storage coordination.",
+      "This proposal only adds read-only view methods to the miner actor — it does not affect existing workflows, proof-of-power, or block production logic.",
+      "Enables new use cases such as custom storage payments, bad-bit insurance systems, and markets for sector repair built on smart contracts."
     ],
     "clients": [
-      "Allows decentralized applications to verify sector status without trust in centralized services"
+      "Decentralized applications can verify sector status directly on-chain without relying on centralized indexing services to confirm data availability.",
+      "Combined with FIP-0109's sector commitment notifications, clients gain full on-chain visibility into the sector lifecycle from creation to termination."
     ],
     "tokenHolders": [
-      "No direct impact on FIL token economics"
+      "No direct impact on FIL token economics or supply, but the proposal indirectly benefits network value by enabling a richer programmable storage ecosystem."
     ],
     "applicationDevelopers": [
-      "Developers can build FEVM contracts that react to sector state changes",
-      "Enables new patterns for decentralized storage coordination"
+      "Developers can build FEVM contracts that react to sector state changes (Active/Faulty/Dead), enabling custom markets, data availability verification, and other advanced use cases.",
+      "ValidateSectorStatus uses a validating interface (pass in status, returns true/false) rather than a data retrieval interface, intentionally placing the index search burden on off-chain callers to allow future miner actor evolution.",
+      "GenerateSectorLocation is designed for off-chain calls, performing an expensive linear search to locate a sector's deadline and partition index; on-chain ValidateSectorStatus calls require only lightweight validation.",
+      "GetNominalSectorExpiration provides a convenient query for sector expiration epochs. Note: early termination can invalidate this value, so it serves only as a hint."
     ]
   }
 }
