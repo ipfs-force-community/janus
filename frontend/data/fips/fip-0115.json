@@ -1,23 +1,21 @@
 {
   "id": "FIP-0115",
-  "title": "Premium Percentile Ratio",
-  "description": "Introduces a Premium Percentile Ratio mechanism for Filecoin network, enabling new pricing models for storage services based on percentile-based premium calculations.",
+  "title": "Premium Percentile Base Fee Target",
+  "description": "Replacing the utilization-based base fee adjustment with a premium-based target will stabilize gas markets and improve tipset efficiency, aligning base fee adjustments with congestion signals to reduce proposer duplications.",
   "showDetailedImpact": false,
   "impacts": {
     "storageProviders": [
-      "Enables new revenue models based on premium storage services",
-      "Provides more flexible pricing mechanisms for specialized storage"
+      "Should review gas price configurations, such as premium floors, that may have been tuned for a negligible base fee."
     ],
     "clients": [
-      "Allows for more granular pricing options for storage services",
-      "Enables premium storage tier implementations"
+      "Because the base fee will rise more often than before, an insufficient gas fee cap may delay message inclusion."
     ],
     "tokenHolders": [
-      "May introduce new economic dynamics for FIL token utility"
+      "Higher base fees reduce net inflation through increased burn."
     ],
     "applicationDevelopers": [
-      "Enables development of advanced pricing and marketplace contracts",
-      "Supports implementation of differentiated storage service markets"
+      "Dashboards, economic models, and pricing tools that assume current base fee behavior will need to be updated.",
+      "Systems recommending gas prices to transactors SHOULD be updated."
     ]
   }
 }

@@ -1,7 +1,7 @@
 {
   "id": "FIP-0112",
-  "title": "Export Sector Status",
-  "description": "Adds a liveness check method to the builtin miner actor to allow for user space fevm contracts to check on the status of filecoin sectors based on sector number.",
+  "title": "Export Sector Status to FEVM",
+  "description": "We propose exporting new methods ValidateSectorStatus, GenerateSectorLocation, and GetNominalSectorExpiration from the builtin miner actor, allowing FEVM smart contracts to query the status and expiration of Filecoin sectors.",
   "showDetailedImpact": false,
   "impacts": {
     "storageProviders": [

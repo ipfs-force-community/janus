@@ -1,21 +1,16 @@
 {
   "id": "FIP-0114",
   "title": "Add Support for EIP-7939 (CLZ Opcode) in the FEVM",
-  "description": "Adds support for EIP-7939 (Count Leading Zeros opcode) in the FEVM, providing native bitwise operation support for efficient computation.",
+  "description": "This proposal adds the CLZ (Count Leading Zeros) opcode to the Filecoin EVM (FEVM), matching Ethereum’s EIP-7939 behavior. CLZ provides a fast, gas-efficient way to count leading zero bits in a 256-bit word, which is widely used in math, compression, bitmap, and ZK proving workflows.",
   "showDetailedImpact": false,
   "impacts": {
-    "storageProviders": [
-      "Enables more efficient data processing routines in FEVM contracts"
-    ],
-    "clients": [
-      "Benefits from reduced computation costs in storage-related smart contracts"
-    ],
-    "tokenHolders": [
-      "No direct impact on FIL token economics"
-    ],
+    "storageProviders": [],
+    "clients": [],
+    "tokenHolders": [],
     "applicationDevelopers": [
-      "Provides native CLZ opcode support for bit manipulation in FEVM contracts",
-      "Improves efficiency for cryptographic and data compression operations"
+      "Improves developer experience and compatibility with Ethereum environments that include EIP-7939.",
+      "Enables more efficient on-chain implementations for math primitives, compression/decompression, and bitmap navigation.",
+      "Can reduce ZK proving costs for applications that currently emulate CLZ using SHR."
     ]
   }
 }
