@@ -1,0 +1,23 @@
+{
+  "id": "FIP-0115",
+  "title": "Premium Percentile Ratio",
+  "description": "Introduces a Premium Percentile Ratio mechanism for Filecoin network, enabling new pricing models for storage services based on percentile-based premium calculations.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "Enables new revenue models based on premium storage services",
+      "Provides more flexible pricing mechanisms for specialized storage"
+    ],
+    "clients": [
+      "Allows for more granular pricing options for storage services",
+      "Enables premium storage tier implementations"
+    ],
+    "tokenHolders": [
+      "May introduce new economic dynamics for FIL token utility"
+    ],
+    "applicationDevelopers": [
+      "Enables development of advanced pricing and marketplace contracts",
+      "Supports implementation of differentiated storage service markets"
+    ]
+  }
+}

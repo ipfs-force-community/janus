@@ -1,0 +1,29 @@
+{
+    "id": "Fire Horse upgrade",
+    "name": "Fire Horse upgrade",
+    "networkVersion": "nv28",
+    "chain": "Mainnet",
+    "epochTarget": null,
+    "timeTarget": "2026-05-25T00:00:00Z",
+    "status": "Upcoming",
+    "lotusReleaseTag": "TBD",
+    "lotusReleaseUrl": "TBD",
+    "venusReleaseTag": "TBD",
+    "venusReleaseUrl": "TBD",
+    "specs": [
+        "FIP-0115",
+        "FIP-0112",
+        "FIP-0113",
+        "FIP-0114"
+    ],
+    "importantFips": [
+        "fip-0115"
+    ],
+    "notes": "NV28 upgrade introducing P256VERIFY precompile, CLZ Opcode support, Premium Percentile Ratio, and Export Sector Status liveness check method for FEVM.",
+    "fipIds": [
+        "fip-0115",
+        "fip-0112",
+        "fip-0113",
+        "fip-0114"
+    ]
+}

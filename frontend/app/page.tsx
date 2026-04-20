@@ -22,7 +22,7 @@ type Upgrade = {
   name: string
   networkVersion: string
   chain: string
-  epochTarget: number
+  epochTarget: number | null
   timeTarget: string
   status: string
   lotusReleaseTag: string

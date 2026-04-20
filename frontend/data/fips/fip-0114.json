@@ -1,0 +1,21 @@
+{
+  "id": "FIP-0114",
+  "title": "Add Support for EIP-7939 (CLZ Opcode) in the FEVM",
+  "description": "Adds support for EIP-7939 (Count Leading Zeros opcode) in the FEVM, providing native bitwise operation support for efficient computation.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "Enables more efficient data processing routines in FEVM contracts"
+    ],
+    "clients": [
+      "Benefits from reduced computation costs in storage-related smart contracts"
+    ],
+    "tokenHolders": [
+      "No direct impact on FIL token economics"
+    ],
+    "applicationDevelopers": [
+      "Provides native CLZ opcode support for bit manipulation in FEVM contracts",
+      "Improves efficiency for cryptographic and data compression operations"
+    ]
+  }
+}

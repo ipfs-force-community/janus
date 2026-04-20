@@ -1,0 +1,21 @@
+{
+  "id": "FIP-0113",
+  "title": "secp256r1 (P-256) P256VERIFY Precompile",
+  "description": "Adds a P256VERIFY precompile at Ethereum address (i.e., 0x0100) to the FEVM, enabling efficient verification of secp256r1 (P-256) elliptic curve signatures.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "Enables use of modern, efficient signature schemes for sector commitments"
+    ],
+    "clients": [
+      "Provides compatibility with ECDSA P-256 signatures used in enterprise and government systems"
+    ],
+    "tokenHolders": [
+      "No direct impact on FIL token economics"
+    ],
+    "applicationDevelopers": [
+      "Allows FEVM contracts to verify P-256 signatures directly without external libraries",
+      "Reduces gas costs for signature verification using standardized curves"
+    ]
+  }
+}

@@ -1,3 +1,9 @@
+// nv28
+import fip0112 from "@/data/fips/fip-0112.json"
+import fip0113 from "@/data/fips/fip-0113.json"
+import fip0114 from "@/data/fips/fip-0114.json"
+import fip0115 from "@/data/fips/fip-0115.json"
+
 // nv27
 import fip0077 from "@/data/fips/fip-0077.json"
 import fip0085 from "@/data/fips/fip-0085.json"
@@ -21,6 +27,10 @@ import fip0094 from "@/data/fips/fip-0094.json"
 import fip0095 from "@/data/fips/fip-0095.json"
 
 export const fipLoaders = {
+  "fip-0112": fip0112,
+  "fip-0113": fip0113,
+  "fip-0114": fip0114,
+  "fip-0115": fip0115,
   "fip-0077": fip0077,
   "fip-0105": fip0105,
   "fip-0103": fip0103,

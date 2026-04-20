@@ -2,10 +2,11 @@
   "upgradeIds": [
     "golden-week-upgrade",
     "teep",
-    "tuk-tuk"
+    "tuk-tuk",
+    "fire-horse-upgrade"
   ],
   "metadata": {
-    "lastUpdated": "2024-12-15T10:00:00Z",
+    "lastUpdated": "2026-04-20T00:00:00Z",
     "version": "1.0.0",
     "statusColors": {
       "Upcoming": "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",

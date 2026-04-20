@@ -1,0 +1,22 @@
+{
+  "id": "FIP-0112",
+  "title": "Export Sector Status",
+  "description": "Adds a liveness check method to the builtin miner actor to allow for user space fevm contracts to check on the status of filecoin sectors based on sector number.",
+  "showDetailedImpact": false,
+  "impacts": {
+    "storageProviders": [
+      "Enables integration with FEVM contracts for real-time sector status monitoring",
+      "Supports better coordination with smart contract-based storage solutions"
+    ],
+    "clients": [
+      "Allows decentralized applications to verify sector status without trust in centralized services"
+    ],
+    "tokenHolders": [
+      "No direct impact on FIL token economics"
+    ],
+    "applicationDevelopers": [
+      "Developers can build FEVM contracts that react to sector state changes",
+      "Enables new patterns for decentralized storage coordination"
+    ]
+  }
+}
