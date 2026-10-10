@@ -1,0 +1,23 @@
+{
+    "id": "solstice-upgrade",
+    "name": "Solstice upgrade",
+    "networkVersion": "nv29",
+    "chain": "Mainnet",
+    "epochTarget": 6470279,
+    "timeTarget": "2026-10-19T12:59:30Z",
+    "status": "Upcoming",
+    "lotusReleaseTag": "lotus v1.37.0",
+    "lotusReleaseUrl": "https://github.com/filecoin-project/lotus/releases/tag/v1.37.0",
+    "venusReleaseTag": "venus v1.21.0",
+    "venusReleaseUrl": "https://github.com/filecoin-project/venus/releases/tag/v1.21.0",
+    "specs": [
+        "FIP-0118"
+    ],
+    "importantFips": [
+        "fip-0118"
+    ],
+    "notes": "NV29 upgrade (Solstice) that deprecates Filecoin Plus and funds a service economy: all new sectors receive 10x QAP regardless of content, legacy 1x sectors are lifted through SnapDeals or UpgradeSectorQuality, and each block reward is split into service (w2, Filecoin Pay volume-gated), consensus (w1, ramping 95% to 50%) and burn (w0, residual) streams governed by the new SWA and SRA contracts. Mainnet upgrade epoch 6470279 (2026-10-19T12:59:30Z); calibnet has already upgraded at epoch 4109133.",
+    "fipIds": [
+        "fip-0118"
+    ]
+}

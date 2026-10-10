@@ -1,0 +1,37 @@
+{
+  "id": "FIP-0118",
+  "title": "(Solstice) Deprecate Fil+ and Fund Services via Block-Reward Split",
+  "description": "Deprecates the Filecoin Plus (datacap) minting and allocation system and re-bases sector quality on sector state: every sector onboarded from the activation epoch receives 10x QAP immediately regardless of content, with explicit upgrade paths (SnapDeals and miner method 37 UpgradeSectorQuality) for legacy 1x sectors. The block reward is split at each issuance into three weighted streams — service (w2, paid to registered Service Orchestrators in proportion to verified Filecoin Pay volume), consensus (w1, paid to the winning miner, ramping down from 95% to 50% over ~9 quarters), and burn (w0 = 1 - w2 - w1, the residual) — with the weights set through a new governed Stream Weights Actor (SWA) whose quarterly volume gate lets w2 step up 5 percentage points only when Filecoin Pay Volume clears its target.",
+  "showDetailedImpact": true,
+  "impacts": {
+    "storageProviders": [
+      "Every new sector onboarded after the activation epoch receives 10x QAP automatically, regardless of content — onboarding no longer consults the verified registry, so sealing pipelines must select pre- or post-upgrade QAP behavior by network version.",
+      "The initial pledge formula is unchanged, but its input rises: new sectors onboard at 10x QAP so pledge per raw byte scales up accordingly, and every lift (snap or UpgradeSectorQuality) locks additional FIL. Reverting a legacy 1x sector to 10x is an explicit, per-sector action — it never happens retroactively.",
+      "Direct block-reward income is reduced by the non-consensus portion (1 - w1): w1 ramps linearly from 95% down to 50% over roughly 9 quarters. SPs serving clients may offset this through deal payments; consensus-only SPs bear a permanent reduction, which is the intended outcome.",
+      "Legacy 1x sectors can be upgraded in bulk via miner actor method 37 UpgradeSectorQuality (batch, atomic): the sector is topped up to 10x QAP and its pledge to the matching level, and an optional new_expiration lets the sector be extended in the same call. Fee debt must clear from unlocked balance in the same message or the whole call aborts.",
+      "SnapDeals (ProveReplicaUpdates3) remain available and now grant 10x QAP automatically with no datacap minted, allocated, or consumed; the update recomputes initial pledge only when it raises the sector's QAP.",
+      "Scale of the one-time power bump: committed-capacity sectors sit at ~208 PiB of raw power; if every 1x byte were snapped or upgraded to 10x, network QAP would gain ~1,872 PiB (+12.7%), roughly 2-3 months of the current net QAP decline.",
+      "lotus-miner gained a sectors upgrade-quality subcommand (with --sectors selection), and lotus filplus commands now print a retirement warning ahead of nv29 — datacap and verified-registry writes stop working at the upgrade epoch, and messages already in flight may fail."
+    ],
+    "clients": [
+      "Onboarding no longer requires datacap allocation: new sectors and SnapDeals receive 10x QAP by default, so clients no longer wait on human datacap gatekeeping or navigate the Fil+ review process.",
+      "The service stream pays out to registered Service Orchestrators proportional to their on-chain Filecoin Pay volume, moving incentives toward services that paying customers actually buy rather than raw capacity.",
+      "Clients gain access to subsidized, verifiable, real-time deal infrastructure without waiting for datacap allocation, and deal payments settled through Filecoin Pay directly fund the service economy.",
+      "In-flight datacap claims and unused datacap balances become inert at the epoch: existing claims remain as historical records, and unclaimed allocations can no longer be claimed — any client workflow that allocates datacap must be retired."
+    ],
+    "tokenHolders": [
+      "The burn stream (w0 = 1 - w2 - w1) is burned at each epoch, creating deflationary pressure whenever the service economy has not yet proven the volume to justify a larger share.",
+      "Block-reward accounting changes: position 9 of the f02 state keeps the grand minted total under a new name so FilMined readers are unchanged, but anything that treated the full block reward as miner-only income must now derive the miner total as the stored total minus burn and explicit-stream counters.",
+      "Aggregate locked supply rises with the QAP bump: each lifted sector locks additional FIL, and per-sector pledge economics converge to today's verified-sector levels, which are already the norm for ~83% of the network.",
+      "w2 starts at 5% and (after a bootstrap quarter) rises 5 percentage points per quarter only if quarterly aggregated Filecoin Pay Volume meets its USD target (entry target 3,500 USD, escalating 2.7x per step); failure leaves w2 constant — so the burn share falls only as genuine demand appears."
+    ],
+    "applicationDevelopers": [
+      "The f02 reward actor's state schema, method surface and payout accounting all change: Lotus, Forest, Venus and downstream state decoders must decode the new state consistently and preserve circulating-supply accounting, and explorers/profitability tools must apply the consensus weight w1 after activation.",
+      "Two new governed FEVM contracts parameterize f02 — the Stream Weights Actor (SWA), which registers streams and sets their weight records and enforces the volume gate, and the Service Rewards Actor (SRA), which computes Orchestrator shares from volume and holds the payer registry. Neither is on the value path, neither ever holds value, and both are upgradeable under governance without a network upgrade.",
+      "f02 keeps a hard-guarded, code-fixed split: it iterates an ordered stream list, so adding a future stream is an on-chain list write rather than a network upgrade (still requiring an accepted FIP by convention). Weights must satisfy the sum-to-one and count guards, and writes queue behind the 7-day SWA timelock.",
+      "The verified-registry and DataCap write paths are disabled in full at the epoch: no minting, no new allocations, no claims, no claim-term extensions. Callers of the disabled methods must handle post-upgrade failure behavior, including messages already in flight; software should retain historical read support until the actors are removed by a later FIP.",
+      "A permissionless QuarterlyGateCheck runs once per quarter on the next unchecked quarter, emits an event recording the checked quarter and result, and writes the new w2 record via StepWeightRecords — the one uncancellable gate write — so tooling can track service-economy growth without reading contract state.",
+      "This FIP is intentionally backwards incompatible and requires a coordinated network upgrade: a node that does not implement the new actor bundle and state migration will diverge from the network at the activation epoch."
+    ]
+  }
+}

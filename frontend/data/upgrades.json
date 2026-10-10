@@ -3,10 +3,11 @@
     "golden-week-upgrade",
     "teep",
     "tuk-tuk",
-    "fire-horse-upgrade"
+    "fire-horse-upgrade",
+    "solstice-upgrade"
   ],
   "metadata": {
-    "lastUpdated": "2026-04-20T00:00:00Z",
+    "lastUpdated": "2026-10-10T00:00:00Z",
     "version": "1.0.0",
     "statusColors": {
       "Upcoming": "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
