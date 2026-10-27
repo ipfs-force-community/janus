@@ -5,7 +5,7 @@
     "chain": "Mainnet",
     "epochTarget": 6470279,
     "timeTarget": "2026-10-19T12:59:30Z",
-    "status": "Upcoming",
+    "status": "Finalized",
     "lotusReleaseTag": "lotus v1.37.0",
     "lotusReleaseUrl": "https://github.com/filecoin-project/lotus/releases/tag/v1.37.0",
     "venusReleaseTag": "venus v1.21.0",
